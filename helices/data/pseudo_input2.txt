@@ -1,0 +1,49 @@
+    ## X is large subunit RNA
+    ## V is the RNA, protein, tRNA of the small subunit
+# 3JYW A
+106      snR44
+120      snR49
+211      snR49
+302      SnR49
+466      snR189
+632      snR161
+759      snR80
+766      snR161
+1000     snR31
+1179     snR85
+1185     snR36
+1189     snR35
+1289     RUF3/snR83
+1414     RUF3/snR83
+# 3JYX 5
+775      snR80
+959      snR8
+965      snR43
+985      snR8
+989      snR49
+1003     snR5
+1041     snR33
+1051     snR81
+1055     snR44
+1109     RUF2/snR82
+1123     snR5
+2128     snR3
+2132     snR3
+2190     snR32
+2257     snR191
+2259     snR191
+2263     snR3
+2265     RUF1/snR84
+2313     snR86
+2339     snR9
+2348      RUF2/snR82
+2350      RUF2/snR82
+2415     snR11
+2730     snR189
+2822     snR34
+2861     snR46
+2876     snR34
+2919     snR10
+2940     snR37
+2971     snR42
+
