@@ -11,9 +11,93 @@ from pymol import stored, cmd, selector
 
 helices_dir = os.path.dirname(__file__)
 datadir=helices_dir + "/data/"
-global molecules
-molecules = []
+global molecule_list
+molecule_list = []
+global original_list
+original_list = []
+global helices_list
+helices_list = []
+
 #global organism
+
+def delete_all_helices():
+  delete_ssu_helices
+  delete_lsu_helices
+
+def delete_all_rna():
+  delete_ssu_rna
+  delete_lsu_rna
+  delete_mrna
+  delete_trna
+
+def delete_all_protein():
+  delete_lsu_protein
+  delete_ssu_protein
+
+def delete_ssu_helices():
+  for helix in helices_list:
+    helix = helix.lstrip('/')
+    if helix.find('SSU_h') > -1:
+      cmd.delete(helix)
+
+def delete_lsu_helices():
+  for helix in helices_list:
+    helix = helix.lstrip('/')
+    helix = str(helix)
+    print "TESTME: " + helix
+    if helix.find('LSU_H') > -1:
+      cmd.delete(helix)
+    else:
+      print "DID NOT FIND"
+
+def delete_ssu_protein():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('S_S') > -1:
+      cmd.delete(mol)
+    elif re.compile('^S').search(mol) is not None:
+      cmd.delete(mol)
+
+def delete_lsu_protein():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('S_L') > -1:
+      cmd.delete(mol)
+    elif re.compile('^L').search(mol) is not None:
+      cmd.delete(mol)
+
+def delete_ssu_rna():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('16S_RRNA') > -1:
+      cmd.delete(mol)
+
+def delete_lsu_rna():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('23S_RRNA') > -1:
+      cmd.delete(mol)
+    elif mol.find('5S_RR') > -1:
+      cmd.delete(mol)
+    elif mol.find('5.8S') > -1:
+      cmd.delete(mol)
+
+def delete_trna():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('TRNA') > -1:
+      cmd.delete(mol)
+
+def delete_mrna():
+  for mol in molecule_list:
+    mol = mol.lstrip('/')
+    if mol.find('MRNA') > -1:
+      cmd.delete(mol)
+
+
+def delete_original():
+  for original_molecule in original_list:
+    cmd.delete(original_molecule)
 
 def delete_lsuh():
   counter = 0
@@ -28,60 +112,6 @@ def delete_ssuh():
         counter = counter + 1
         string = "SSU_h", counter
         cmd.delete(string)
-
-
-def delete_lsup():
-  cmd.delete("RPL32")
-  cmd.delete("RPL39")
-  cmd.delete("RPL30E")
-  cmd.delete("RPLP0")
-  cmd.delete("RPL43")
-  cmd.delete("RPL1")
-  cmd.delete("RPL2")
-  cmd.delete("RPL3")
-  cmd.delete("RPL4B")
-  cmd.delete("RPL5")
-  cmd.delete("RPL7A")
-  cmd.delete("RPL8A")
-  cmd.delete("RPL9A")
-  cmd.delete("RPL10")
-  cmd.delete("RPL11B")
-  cmd.delete("RPL12")
-  cmd.delete("RPL15A")
-  cmd.delete("RPL16A")
-  cmd.delete("RPL17A")
-  cmd.delete("RPL18A")
-  cmd.delete("RPL19")
-  cmd.delete("RPL21A")
-  cmd.delete("RPL23")
-  cmd.delete("RPL24")
-  cmd.delete("RPL25")
-  cmd.delete("RPL26A")
-  cmd.delete("RPL28")
-  cmd.delete("RPL31A")
-  cmd.delete("RPL35")
-  cmd.delete("RPL37A")
-  cmd.delete("RPL42")
-
-def delete_ssup():
-  cmd.delete("RPS0A")
-  cmd.delete("RPS3")
-  cmd.delete("RPS9A")
-  cmd.delete("RPS2")
-  cmd.delete("RPS5")
-  cmd.delete("RPS22A")
-  cmd.delete("RPS16A")
-  cmd.delete("RPS20")
-  cmd.delete("RPS14A")
-  cmd.delete("RPS23A")
-  cmd.delete("RPS18")
-  cmd.delete("RPS29A")
-  cmd.delete("RPS13")
-  cmd.delete("RPS11")
-  cmd.delete("RACK1")
-  cmd.delete("RPS15")
-  cmd.delete("RPS19E")
-
 
 class fetch_then_chains:
   def __init__(self, app):
@@ -268,6 +298,7 @@ def make_chains(chains, showastype, showascolor):
           cmd.disable(name)
           new_selection = "/" + name
           if showastype:
+            helices_list.append(new_selection)
             cmd.show(showastype, new_selection)
             if showascolor:
               cmd.color(showascolor, new_selection)
@@ -300,6 +331,8 @@ def random_chains(pdb_file, splitp):
   pdb_basename = os.path.basename(pdb_filename)
   pdb_shortname = os.path.splitext(pdb_basename)
   pdb_shortname = pdb_shortname[0] 
+  original_list.append(pdb_shortname)
+
 #  print "TESTME " + pdb_filename
     ## pdb_filename is the full filename
     ## pdb_shortname is the 2WGD or whathaveyou
@@ -383,7 +416,7 @@ def random_chains(pdb_file, splitp):
           color = 'slate'
         elif (mol_name.find('MRNA') > -1 or mol_name.find('MESSENGER') > -1):
           color = 'forest'
-        elif (mol_name.find('RRNA') > -1 or mol_name.find('RIBOSOMAL') > -1):
+        elif (mol_name.find('RRNA') > -1 or mol_name.find('S_RNA') > -1 or mol_name.find('RIBOSOMAL') > -1):
           if (mol_name.find('16S') > -1):
             color = 'gray20'
           elif (mol_name.find('23S') > -1):
@@ -398,6 +431,7 @@ def random_chains(pdb_file, splitp):
         color = 'red'
 
       mol_name = mol_name.replace('RIBOSOMAL_','')
+      mol_name = mol_name.replace('S_RN', 'S_RRN')
       mol_name = mol_name.replace('PROTEIN_','')
       chain_name = chain_name.rstrip()
       chain_name = chain_name.rstrip(';')
@@ -436,7 +470,7 @@ def define_chain(selection_string, color, mol_name):
   cmd.color(color, mol_name)
   cmd.disable(mol_name)
   cmd.zoom("all")
-  molecules.append(mol_name)
+  molecule_list.append(mol_name)
 
 
 cmd.extend("chain_color", chain_color)
@@ -445,3 +479,13 @@ cmd.extend("make_chains", make_chains)
 cmd.extend("load_session", load_session)
 cmd.extend("split_pdb", random_chains("", ""))
 cmd.extend("helices", helices)
+cmd.extend("delete_original",delete_original)
+cmd.extend("delete_mrna", delete_mrna)
+cmd.extend("delete_trna", delete_trna)
+cmd.extend("delete_lsu_rna", delete_lsu_rna)
+cmd.extend("delete_ssu_rna", delete_ssu_rna)
+cmd.extend("delete_lsu_protein", delete_lsu_protein)
+cmd.extend("delete_ssu_protein", delete_ssu_protein)
+cmd.extend("delete_lsu_helices", delete_lsu_helices)
+cmd.extend("delete_ssu_helices", delete_ssu_helices)
+cmd.extend("delete_all_helices", delete_all_helices)

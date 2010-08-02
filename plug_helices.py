@@ -24,6 +24,25 @@ def __init__(self):
     self.menuBar.addmenuitem('Color positions', 'command', 'Custom file',
                              label = 'Custom file',
                              command = lambda: chain_color("custom"))
-    self.menuBar.addcascademenu('Ribosome','Delete chains')
-
+    self.menuBar.addcascademenu('Ribosome','Delete objects')
+    self.menuBar.addmenuitem('Delete objects', 'command', 'Original', label='Original',
+                             command = lambda: delete_original())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'ALL_RNA', label='ALL_RNA',
+                             command = lambda: delete_all_rna())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'LSU_RNA', label='LSU_RNA',
+                             command = lambda: delete_lsu_rna())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_RNA', label='SSU_RNA',
+                             command = lambda: delete_ssu_rna())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'All_protein', label='All_protein',
+                             command = lambda: delete_all_protein())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'LSU_protein', label='LSU_protein',
+                             command = lambda: delete_lsu_protein())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_protein', label='SSU_protein',
+                             command = lambda: delete_ssu_protein())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'All_helices', label='All_helices',
+                             command = lambda: delete_all_helices())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'LSU_helices', label='LSU_helices',
+                             command = lambda: delete_lsu_helices())
+    self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_helices', label='SSU_helices',
+                             command = lambda: delete_ssu_helices())
 
