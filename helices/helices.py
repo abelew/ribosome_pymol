@@ -11,20 +11,9 @@ from pymol import stored, cmd, selector
 
 helices_dir = os.path.dirname(__file__)
 datadir=helices_dir + "/data/"
+global molecules
+molecules = []
 #global organism
-
-def delete_frank():
-  cmd.delete("3JYW")
-  cmd.delete("3JYX")
-  cmd.delete("3JYV")
-
-def delete_lsu():
-  cmd.delete("25S_rRNA")
-  cmd.delete("5.8S_rRNA")
-  cmd.delete("5S_rRNA")
-
-def delete_ssu():
-  cmd.delete("18S_rRNA")
 
 def delete_lsuh():
   counter = 0
@@ -37,7 +26,7 @@ def delete_ssuh():
     counter = 0
     while (counter <= 45):
         counter = counter + 1
-        string = "SSU_H", counter
+        string = "SSU_h", counter
         cmd.delete(string)
 
 
@@ -328,23 +317,18 @@ def random_chains(pdb_file, splitp):
     if re.compile("^TITLE").search(pdb_line) is not None:
       continue
     if re.compile("^SPLIT").search(pdb_line) is not None:
-#      print "FOUND SPLIT!"
       if splitp == "":
-#        print "SPLITP is none!"
         chains_list = pdb_line.split()
         chains_list.pop(0)
         for pdb_id in chains_list:
-#          print "TESTME pdb_id: " + pdb_id
           if (pdb_id != pdb_shortname):
             fetch(pdb_id,"1")
       else:
-#        print "SPLITP is not none!" + splitp + "!"
         continue
     if re.compile("^CAVEAT").search(pdb_line) is not None:
       continue
     if re.compile("^SOURCE").search(pdb_line) is not None:
       source_count = source_count + 1
-#      print "TESTME: " + str(source_count)
       if (source_count > 3):
         break
       else:
@@ -352,7 +336,6 @@ def random_chains(pdb_file, splitp):
         line_type = line_array[0]
         num = line_array[1]
         chain_mol = line_array[2]
-#        print "TEST type, num, mol" + line_type + num + chain_mol
         if (chain_mol == 'ORGANISM_SCIENTIFIC:'):
           (pre, organism) = pdb_line.split(": ")
           org = str(organism)
@@ -361,9 +344,7 @@ def random_chains(pdb_file, splitp):
           org = org.lower()
           org = org.replace(' ', '_')
           organism = "%s" %(org)
-#          print  organism
 
-#    print "Line:" + pdb_line
     line_array = pdb_line.split()
     line_type = line_array[0]
     num = line_array[1]
@@ -420,8 +401,6 @@ def random_chains(pdb_file, splitp):
       mol_name = mol_name.replace('PROTEIN_','')
       chain_name = chain_name.rstrip()
       chain_name = chain_name.rstrip(';')
-#      output = "TESTME %s, %s." %(mol_name, chain_name)
-#      print output
       if (chain_name.find(',') > -1):
         chain_array = chain_name.split(',')
         num = 0
@@ -435,36 +414,34 @@ def random_chains(pdb_file, splitp):
         selection_string = '/' + pdb_shortname + '//' + chain_name
         define_chain(selection_string, color, mol_name)
   cmd.disable(pdb_shortname)
-#  print "TESTME THE ORGANISM " + organism
+
+def check_names(current, used_names=[]):
+  current = str(current)
+  found = 0
+  for used_mol_name in used_names:
+    if current == used_mol_name:
+      current = current + '_'
+      found = found + 1
+
+  if (found > 0):
+    return check_names(current)
+  else:
+    used_names.append(current)
+    return current
 
 def define_chain(selection_string, color, mol_name):
-#  print "SELECTION " + selection_string
+  mol_name = check_names(mol_name)
   cmd.create(mol_name, selection_string)
   cmd.show("cartoon", mol_name)
   cmd.color(color, mol_name)
-#  print "Creating " + mol_name
   cmd.disable(mol_name)
   cmd.zoom("all")
-
-def load_frank_ribosome():
-    first_file = datadir + "3JYW.pdb"
-#    print "The first file is: " + first_file
-    cmd.load(first_file)
-    second_file = datadir + "3JYX.pdb"
-    cmd.load(second_file)
-    third_file = datadir + "3JYV.pdb"
-    cmd.load(third_file)
-    make_pretty()
-    cmd.zoom("/3JYX")
-    cmd.disable("3JYX")
-    cmd.disable("3JYV")
-    cmd.disable("3JYW")
+  molecules.append(mol_name)
 
 
 cmd.extend("chain_color", chain_color)
 cmd.extend("make_pretty", make_pretty)
 cmd.extend("make_chains", make_chains)
 cmd.extend("load_session", load_session)
-cmd.extend("load_frank_ribosome", load_frank_ribosome)
 cmd.extend("split_pdb", random_chains("", ""))
 cmd.extend("helices", helices)
