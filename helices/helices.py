@@ -257,6 +257,8 @@ def make_chains(chains, showastype, showascolor):
   elif chains == 'frank':
     load_frank_ribosome()
     chains_filenames = [datadir + 'frank_chains.txt',]
+  elif chains.find('escherichia_coli') > -1:
+    chains_filenames = [datadir + 'escherichia_coli.txt',]
   elif chains == 'thermomyces_lanuginosus':
     chains_filenames = [datadir + 'saccharomyces_helices.txt',]
   elif chains == 'thermus_thermophilus':
