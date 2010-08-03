@@ -1,0 +1,20 @@
+This is a pymol plugin intended to make working with ribosomal
+pdb files easier.  It parses the pdb header and attempts to
+make some reasonable inferences about the RNAs and proteins.
+It will also attempt to annotate the nearly 150 ribosomal RNA
+helices.  Finally, it has some basic functionality to color residues
+based upon arbitrary chain or molecule names.
+
+In the 2d directory is a perl script which can color the utexas
+ribosomal secondary structure maps.  It does so via the hilariously
+crude method of simply inserting color declarations into the original
+postscript files.  As such it is not currently very (at all) extensible.
+
+
+The main thing I would like to do with this code is to have a 2d picture
+appear when one selects various helices in the 3d map displaying them in 
+both formats.
+
+All functionality is usable via the plugin/ribosome menu in the python 
+control window.  Most functions in it are also exported to the pymol
+command line interface.

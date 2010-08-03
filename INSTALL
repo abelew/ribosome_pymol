@@ -1,0 +1,7 @@
+1.  Copy this directory and its subdirectories into ${PYMOL_HOME}/modules/pmg_tk/startup
+    ${PYMOL_HOME} in windows is usually c:\program files\delano scientific\pymol
+    On unix-like operating systems this can vary widely, the fastest way is probably to run
+    `locate pmg_tk`  On my Debian system it is /usr/share/pyshared/
+2.  Launch pymol, go to plugins and hit 'install plugin' and find the plug_helices.py inside
+    the pymol directory.
+3.  Relaunch pymol.
