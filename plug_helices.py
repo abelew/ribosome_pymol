@@ -6,6 +6,7 @@ import tkFileDialog
 import sys, string, re, os
 from pymol import cmd
 from helices.helices import *
+## This file loads into the pymol menu system and creates 'Ribosome' menu.
 
 def __init__(self):
     self.menuBar.addcascademenu('Plugin','Ribosome')

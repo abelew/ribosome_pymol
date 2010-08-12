@@ -1,4 +1,3 @@
-### Stealing horribly from remote_pdb_load.py
 from Tkinter import *
 import tkSimpleDialog
 import tkMessageBox
@@ -8,7 +7,13 @@ import os, sys, string, re
 import urllib
 import gzip
 from pymol import stored, cmd, selector
+## The function 'fetch_then_chains' was taken with very minor changes
+## from remote_pdb_load.py.  The copyright notice is at the bottom of
+## this file as well as the README
 
+## Set up the directory where the data files live and some global variables
+## which will be used to store the names of the molecules and helices from the
+## PDB files.
 helices_dir = os.path.dirname(__file__)
 datadir=helices_dir + "/data/"
 global molecule_list
@@ -18,8 +23,9 @@ original_list = []
 global helices_list
 helices_list = []
 
-#global organism
 
+## The delete_ functions do just that, delete the various molecules associated
+## with them.
 def delete_all_helices():
   delete_ssu_helices
   delete_lsu_helices
@@ -44,7 +50,6 @@ def delete_lsu_helices():
   for helix in helices_list:
     helix = helix.lstrip('/')
     helix = str(helix)
-    print "TESTME: " + helix
     if helix.find('LSU_H') > -1:
       cmd.delete(helix)
     else:
@@ -94,7 +99,6 @@ def delete_mrna():
     if mol.find('MRNA') > -1:
       cmd.delete(mol)
 
-
 def delete_original():
   for original_molecule in original_list:
     cmd.delete(original_molecule)
@@ -113,6 +117,8 @@ def delete_ssuh():
         string = "SSU_h", counter
         cmd.delete(string)
 
+## I changed like 2 lines from remote_load_pdb.py
+## The main change is at the end of fetch()
 class fetch_then_chains:
   def __init__(self, app):
     import tkSimpleDialog
@@ -132,32 +138,24 @@ def fetch(pdb, splitp):
   import string
   import tkMessageBox
   try:
-    # filename = urllib.urlretrieve('http://www.rcsb.org/pdb/cgi/export.cgi/' +
-    # pdbCode + '.pdb.gz?format=PDB&pdbId=' +
-    # pdbCode + '&compression=gz')[0]
     filename = urllib.urlretrieve('http://www.rcsb.org/pdb/files/' + pdb + '.pdb.gz')[0]
   except:
     tkMessageBox.showerror('Connection Error',
                            'Can not access to the PDB database.\n'+
                            'Please check your Internet access.',)
-#                           parent=app.root)
   else:
     if (os.path.getsize(filename) > 0): # If 0, then pdb code was invalid
-      # Uncompress the file while reading
       fpin = gzip.open(filename)
-        # Form the pdb output name
       outputname = os.path.dirname(filename) + os.sep + pdb + '.pdb'
       fpout = open(outputname, 'w')
       fpout.write(fpin.read()) # Write pdb file
       fpin.close()
       fpout.close()
       cmd.load(outputname,quiet=0) # Load the fresh pdb
-#      print "TESTME about to run: " + filename
+      ## This is the change from Trey, a callout to random_chains()
       random_chains(outputname,splitp)
     else:
       tkMessageBox.showerror('Invalid Code', 'You entered an invalid pdb code:' + pdb,)
-#                             parent=app.root)
-          
       os.remove(filename) # Remove tmp file (leave the pdb)
 
 
@@ -491,3 +489,33 @@ cmd.extend("delete_ssu_protein", delete_ssu_protein)
 cmd.extend("delete_lsu_helices", delete_lsu_helices)
 cmd.extend("delete_ssu_helices", delete_ssu_helices)
 cmd.extend("delete_all_helices", delete_all_helices)
+
+# Copyright Notice
+# ================
+# 
+# The PyMOL Plugin source code in this file is copyrighted, but you can
+# freely use and copy it as long as you don't change or remove any of
+# the copyright notices.
+# 
+# ----------------------------------------------------------------------
+# This PyMOL Plugin is Copyright (C) 2004 by Charles Moad <cmoad@indiana.edu>
+# 
+#                        All Rights Reserved
+# 
+# Permission to use, copy, modify, distribute, and distribute modified
+# versions of this software and its documentation for any purpose and
+# without fee is hereby granted, provided that the above copyright
+# notice appear in all copies and that both the copyright notice and
+# this permission notice appear in supporting documentation, and that
+# the name(s) of the author(s) not be used in advertising or publicity
+# pertaining to distribution of the software without specific, written
+# prior permission.
+# 
+# THE AUTHOR(S) DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN
+# NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+# USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+# ----------------------------------------------------------------------

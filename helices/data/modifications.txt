@@ -1,4 +1,4 @@
-# 18S_rRNA
+# 18S_RRNA
 414 Cm
 1267 Gm
 541 Am
@@ -29,7 +29,7 @@
 1189 pseudo
 1289 pseudo
 1414 pseudo
-# 25S_rRNA
+# 26S_RRNA
 647 Am
 648 Cm
 1435 Cm
