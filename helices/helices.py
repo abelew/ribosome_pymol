@@ -22,10 +22,26 @@ global original_list
 original_list = []
 global helices_list
 helices_list = []
-
-
+global default_colors
+default_colors = {
+  'default' : 'gray10',
+  'helix' : 'red',
+  'RACK' : 'cyan',
+  'SSU_protein' : 'cyan',
+  'LSU_protein' : 'skyblue',
+  'unknown' : 'green',
+  'tRNA' : 'slate',
+  'mRNA' : 'forest',
+  'SSU_RNA' : 'gray20',
+  'LSU_RNA' : 'gray30',
+  '5S_RNA' : 'gray40',
+  '5.8S_RNA' : 'gray50',
+  'RNA' : 'gray60',
+  'other' : 'red'
+}
 ## The delete_ functions do just that, delete the various molecules associated
-## with them.
+## with them.  The protein and helices functions do some very simplistic
+## string.find calls to identify the helices and proteins.
 def delete_all_helices():
   delete_ssu_helices
   delete_lsu_helices
@@ -52,8 +68,6 @@ def delete_lsu_helices():
     helix = str(helix)
     if helix.find('LSU_H') > -1:
       cmd.delete(helix)
-    else:
-      print "DID NOT FIND"
 
 def delete_ssu_protein():
   for mol in molecule_list:
@@ -158,103 +172,93 @@ def fetch(pdb, splitp):
       tkMessageBox.showerror('Invalid Code', 'You entered an invalid pdb code:' + pdb,)
       os.remove(filename) # Remove tmp file (leave the pdb)
 
-
+## chain_color will color arbitrary bases/residues with the colors
+## specified in data/color_definitions.txt
+## The residues chosen should be in a text file as per
+## data/modifications.txt
 def chain_color(bases):
-    input_file = ""
-    if bases == "modified":
-        input_file = datadir + 'modifications.txt'
-    else:
-        tmp_filename = tkFileDialog.askopenfile(title="Open a session")
-        if not tmp_filename: return
-        input_file = tmp_filename.name
-    comment = ''
+  ## The next 8 lines attempts to figure out what file
+  ## to use to define the residues to color
+  input_file = ""
+  if bases == "modified":
+    input_file = datadir + 'modifications.txt'
+  else:
+    tmp_filename = tkFileDialog.askopenfile(title="Open a session")
+    if not tmp_filename: return
+    input_file = tmp_filename.name
+  comment = ''
 
-    colors_file = datadir + 'color_definitions.txt'
-    colors = dict({None : 'gray',})
-    if colors_file:
-        color_lines = file(colors_file).readlines()
-    for color_line in color_lines:
-        color_datum = color_line.split()
-        colors[color_datum[0]] = color_datum[1]
-#        print "Setting ", color_datum[0], " to ", color_datum[1]
-    if input_file:
-        lines = file(input_file).readlines()
+  ## From here until 'if input_file:' the color definitions
+  ## are specified
+  colors_file = datadir + 'color_definitions.txt'
+  colors = dict({None : 'gray',})
+  if colors_file:
+    color_lines = file(colors_file).readlines()
+  for color_line in color_lines:
+    color_datum = color_line.split()
+    colors[color_datum[0]] = color_datum[1]
+
+  ## Now read the input file and select the appropriate residues
+  ## and color them according to the rules in the colors dictionary
+  if input_file:
+    lines = file(input_file).readlines()
+  else:
+    lines = sys.stdin.readlines()
+  subunit = ''
+  chain = ''
+  for line in lines:
+    chain = ""
+    if re.compile('^#').search(line) is not None: # skip commented lines
+      tmpre = re.compile('^#')
+      tmpre = tmpre.sub('', line)
+      try:
+        (subunit, chain) = tmpre.split()
+      except:
+        subunit = tmpre.strip()
     else:
-        lines = sys.stdin.readlines()
-    subunit = ''
-    chain = ''
-    for line in lines:
-        chain = ""
-        if re.compile('^#').search(line) is not None: # skip commented lines
-            tmpre = re.compile('^#')
-            tmpre = tmpre.sub('', line)
-            try:
-                (subunit, chain) = tmpre.split()
-#                print "Working with " + subunit + chain
-            except:
-                subunit = tmpre.strip()
-#                print "Working with " + subunit
+      datum = line.split()
+      try:
+        num = datum[0].strip()
+        if chain == "":
+          selection_string = '/' + subunit + '///' + num
+          selection_name = subunit + '_' + num
         else:
-            datum = line.split()
-            try:
-                num = datum[0].strip()
-
-                if chain == "":
-                    selection_string = '/' + subunit + '///' + num
-                    selection_name = subunit + '_' + num
-                else:
-                    selection_string = '/' + subunit + '//' + chain + '/' + num
-                    selection_name = subunit + '_' + chain + '_' + num
-                color_choice = datum[1].strip()
-                color_name = ''
-                try:
-                    color_name = colors[color_choice]
-                except:
-                    color_name = color_choice
-#                print 'Coloring: ', selection_string, ' ', color_name
-                try:
-                    cmd.color(color_name, selection_string)
-#                    cmd.show("sticks", selection_string)
-                except:
-                    cmd.color(colors[None], selection_string)
-            except:
-                print "Cannot find your selection, perhaps you must split the chains first"
+          selection_string = '/' + subunit + '//' + chain + '/' + num
+          selection_name = subunit + '_' + chain + '_' + num
+        color_choice = datum[1].strip()
+        color_name = ''
+        try:
+          color_name = colors[color_choice]
+        except:
+          color_name = color_choice
+        try:
+          cmd.color(color_name, selection_string)
+        except:
+          cmd.color(colors[None], selection_string)
+      except:
+        print "Cannot find your selection, perhaps you must split the chains first"
 
 
 def make_pretty():
-#    print "Setting the background to black, change this with 'bg_color <color>'"
-    cmd.bg_color("white")
-    print "Setting the protein of the large subunit to yelloworange"
-    print "Change this with 'color yelloworange, 3JYW'"
-    cmd.color("yelloworange", "/3JYW")
-    print "Setting the large subunit RNA to gray60"
-    print "Change this with 'color gray60, /3JYX'"
-    cmd.color("gray60", "/3JYX")
-    print "Setting the entire small subunit to palecyan"
-    print "Including the proteins, tRNA, and RNA"
-    cmd.color("palecyan", "/3JYV")
-    print "Setting the tRNA to slate"
-    cmd.color("slate", "/3JYV//7")
-    print "Setting the small subunit RNA to gray70"
-    cmd.color("gray70", "/3JYV//A")      ## //A is the small subunit RNA
-    print "Setting the cartoon settings"
-    cmd.show("cartoon")
-    cmd.set("cartoon_ring_mode", 3)
+  ## These are some settings our professor prefers.
+  cmd.bg_color("white")
+  cmd.show("cartoon")
+  cmd.set("cartoon_ring_mode", 3)
 
+## This function is the toplevel function to make pretty helices
+## Change the default_colors['helix'] to whatever color you prefer.
 def helices():
-#  print "TESTME organism " + organism
-  make_chains(organism, 'sticks', 'red')
+  make_chains(organism, 'sticks', default_colors['helix'])
 
 def make_chains(chains, showastype, showascolor):
-#  print "TESTME chain, type, color " + chains + showastype + showascolor
+  ## Start out figuring out the data file to specify the helices
+  ## Currently I just have a stupid if/elif chain for the few species
+  ## I have annotated.
   if chains == 'wtf':
     print "WTF"
     chains_filenames = [datadir + 'wtf.txt',]
   elif chains == 'ssh':
     chains_filenames = [datadir + 'helices_ssu.txt',]
-  elif chains == 'frank':
-    load_frank_ribosome()
-    chains_filenames = [datadir + 'frank_chains.txt',]
   elif chains.find('escherichia_coli') > -1:
     chains_filenames = [datadir + 'escherichia_coli.txt',]
   elif chains == 'thermomyces_lanuginosus':
@@ -267,23 +271,11 @@ def make_chains(chains, showastype, showascolor):
     chains_filenames = [datadir + 'saccharomyces_helices.txt',]
   elif chains == 'saccharomyces_cerevisiae':
     chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-  elif chains == 'lsh':
-    chains_filenames = [datadir + 'helices_lsu.txt',]
-  elif chains == 'rna':
-    chains_filenames = [datadir + 'chains_rna.txt',]
-  elif chains == 'ssu':
-    chains_filenames = [datadir + 'chains_ssu.txt',]
-  elif chains == 'lsu':
-    chains_filenames = [datadir + 'chains_lsu.txt',]
-  elif chains == 'proteins':
-    chains_filenames = [datadir + 'chains_lsu.txt', datadir + 'chains_ssu.txt']
-  elif chains == 'all':
-    chains_filenames = [datadir + 'chains_rna.txt', datadir + 'chains_ssu.txt', datadir + 'chains_lsu.txt',]
   else:
     print "Could not understand the argument:" + chains +", using the wtf file"
     chains_filenames = [datadir + 'wtf.txt',]
+  ## Once the species has been decided, open the appropriate file and start
   for chains_filename in chains_filenames:
-#    print "Working with " + chains_filename
     if chains_filename:
       chains_lines = file(chains_filename).readlines()
       for ch in chains_lines:
@@ -291,8 +283,9 @@ def make_chains(chains, showastype, showascolor):
           continue
         name = ''
         location = ''
+        ## Each line of the file is a name, pymol_specification
+        ## so just split by comma and run with it
         (name, location) = ch.split(',')
-#        print "Creating " + name
         try:
           cmd.create(name, location)
           cmd.disable(name)
@@ -303,15 +296,9 @@ def make_chains(chains, showastype, showascolor):
             if showascolor:
               cmd.color(showascolor, new_selection)
         except:
-          if chains == 'frank':
-            load_frank_ribosome()
-          elif chains == 'saccharomyces':
-            load_frank_ribosome()
-            make_chains("frank", "", "")
+          print "There was an error."
     ## Zoom to something sane
-        if chains == 'frank':
-          delete_frank()
-          cmd.zoom("all")
+    cmd.zoom("all")
 
 
 def load_session(filename):
@@ -320,35 +307,40 @@ def load_session(filename):
     file_path = filename.name
     cmd.load(file_path)
 
+## This function will split apart ribosomal PDB files into 
+## the individual pieces by reading the header and attempting
+## to choose sane names from the information there.
 def random_chains(pdb_file, splitp):
   cmd.bg_color("white")
   import re
   if pdb_file is None:
     pdb_file = tkFileDialog.askopenfile(title="Open a session")
   if not pdb_file: return
+  ## pdb_filename is the full filename
+  ## pdb_shortname is the 2WGD or whathaveyou
+  ## pdb_basename is the path it lives in
+  ## pdb_file is the file object which has all the attributes etc
   pdb_filename = str(pdb_file)
-#  print "TESTME " + pdb_filename
   pdb_basename = os.path.basename(pdb_filename)
   pdb_shortname = os.path.splitext(pdb_basename)
   pdb_shortname = pdb_shortname[0] 
   original_list.append(pdb_shortname)
-
-#  print "TESTME " + pdb_filename
-    ## pdb_filename is the full filename
-    ## pdb_shortname is the 2WGD or whathaveyou
-    ## pdb_basename is the path it lives in
-    ## pdb_file is the file object which has all the attributes etc
   cmd.load(pdb_filename)
   pdb_lines = file(pdb_filename).readlines()
   chain = ''
   source_count = 0
   global organism
   organism = str('saccharomyces_cerevisiae')
+  ## The following lines are attempting to properly decide
+  ## when to stop reading a PDB file
   for pdb_line in pdb_lines:
     if re.compile("^HEADER").search(pdb_line) is not None:
       continue
     if re.compile("^TITLE").search(pdb_line) is not None:
       continue
+    ## If a PDB file has a SPLIT entry, then it is part of
+    ## a group.  So make a list of all entries in the group
+    ## and fetch/split them all.
     if re.compile("^SPLIT").search(pdb_line) is not None:
       if splitp == "":
         chains_list = pdb_line.split()
@@ -360,6 +352,8 @@ def random_chains(pdb_file, splitp):
         continue
     if re.compile("^CAVEAT").search(pdb_line) is not None:
       continue
+    ## The SOURCE stanza contains the species and so will be useful
+    ## for figuring out the helices later if need be.
     if re.compile("^SOURCE").search(pdb_line) is not None:
       source_count = source_count + 1
       if (source_count > 3):
@@ -378,6 +372,11 @@ def random_chains(pdb_file, splitp):
           org = org.replace(' ', '_')
           organism = "%s" %(org)
 
+    ## The surviving lines should proved a means to find the
+    ## name of every chain and molecule of the PDB file.
+    ## A little minor sterilizing of the molecule's name
+    ## will likely be required, and then pull them apart,
+    ## select them, and color them, voila.
     line_array = pdb_line.split()
     line_type = line_array[0]
     num = line_array[1]
@@ -397,39 +396,40 @@ def random_chains(pdb_file, splitp):
       mol_name = mol_name.replace('\`','')
       mol_name = mol_name.replace('\\','')
       mol_name = mol_name.replace(' ', '_')
-      color = 'gray10'
+      color = default_colors['default']
       if (mol_name.find('PROTEIN') > -1):
         if (mol_name.find('RACK') > -1):
-          color = 'cyan'
+          color = default_colors['RACK']
         elif (mol_name.find('30S') > -1):
-          color = 'cyan'
+          color = default_colors['SSU_protein']
         elif (mol_name.find('50S') > -1):
-          color = 'skyblue'
+          color = default_colors['LSU_protein']
         elif (mol_name.find('40S') > -1):
-          color = 'cyan'
+          color = default_colors['SSU_protein']
         elif (mol_name.find('60S') > -1):
-          color = 'skyblue'
+          color = default_colors['LSU_protein']
         else:
-          color = 'green'
+          color = default_colors['unknown']
       elif (mol_name.find('RNA') > -1):
         if (mol_name.find('TRNA') > -1):
-          color = 'slate'
+          color = default_colors['tRNA']
         elif (mol_name.find('MRNA') > -1 or mol_name.find('MESSENGER') > -1):
-          color = 'forest'
+          color = default_colors['mRNA']
         elif (mol_name.find('RRNA') > -1 or mol_name.find('S_RNA') > -1 or mol_name.find('RIBOSOMAL') > -1):
           if (mol_name.find('16S') > -1):
-            color = 'gray20'
+            color = default_colors['SSU_RNA']
           elif (mol_name.find('23S') > -1):
-            color = 'gray30'
+            color = default_colors['LSU_RNA']
           elif (mol_name.find('5S') > -1):
-            color = 'gray40'
+            color = default_colors['5S_RNA']
           elif (mol_name.find('5.8S') > -1):
-            color = 'gray50'
+            color = default_colors['5.8S_RNA']
           else:
-            color = 'gray60'
+            color = default_colors['RNA']
       else:
-        color = 'red'
+        color = default_colors['other']
 
+      ## Now that the various colors have been chosen, find the chains and make them
       mol_name = mol_name.replace('RIBOSOMAL_','')
       mol_name = mol_name.replace('S_RN', 'S_RRN')
       mol_name = mol_name.replace('PROTEIN_','')
@@ -449,6 +449,11 @@ def random_chains(pdb_file, splitp):
         define_chain(selection_string, color, mol_name)
   cmd.disable(pdb_shortname)
 
+## check_names is intended to avoid having duplicate names
+## for those cases when there are crystals containing multiple
+## ribosomes and/or multiple tRNAs in the same ribosome
+## If that happens, an '_' is just appended to the molecule name.
+## If more are found, more '_'s are added
 def check_names(current, used_names=[]):
   current = str(current)
   found = 0
@@ -456,7 +461,6 @@ def check_names(current, used_names=[]):
     if current == used_mol_name:
       current = current + '_'
       found = found + 1
-
   if (found > 0):
     return check_names(current)
   else:
