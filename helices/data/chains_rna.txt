@@ -1,6 +1,0 @@
-PE_tRNA,/3JYV//7
-5S_rRNA,/3JYX//3
-5.8S_rRNA,/3JYX//4
-18S_rRNA,/3JYV//A
-25S_rRNA,/3JYX//5
-RNA,/PE_tRNA/// or /5S_rRNA/// or /5.8S_rRNA/// or /18S_rRNA/// or /25S_rRNA///

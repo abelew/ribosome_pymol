@@ -341,6 +341,7 @@ def random_chains(pdb_file, splitp):
     ## If a PDB file has a SPLIT entry, then it is part of
     ## a group.  So make a list of all entries in the group
     ## and fetch/split them all.
+    ## Go recursion!
     if re.compile("^SPLIT").search(pdb_line) is not None:
       if splitp == "":
         chains_list = pdb_line.split()
