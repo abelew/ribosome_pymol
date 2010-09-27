@@ -46,5 +46,5 @@ def __init__(self):
                              command = lambda: delete_lsu_helices())
     self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_helices', label='SSU_helices',
                              command = lambda: delete_ssu_helices())
-    self.menuBar.addmenuitem('Ribosome','command','2dHelices',label='2dHelices',command = lambda: 2dhelices())
+    self.menuBar.addmenuitem('Ribosome','command','2dHelices',label='2dHelices',command = lambda: twod_helices())
 

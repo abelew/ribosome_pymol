@@ -253,7 +253,7 @@ def helices():
 
 ## This should ask for the relevant data file and call the
 ## cheater perl scripts I wrote
-def 2dhelices():
+def twod_helices():
   subprocess.Popen([r"2d/make_color_ps.pl"]).wait()
   
 def make_chains(chains, showastype, showascolor):
