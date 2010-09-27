@@ -6,6 +6,7 @@ import tkFileDialog
 import os, sys, string, re
 import urllib
 import gzip
+import subprocess
 from pymol import stored, cmd, selector
 ## The function 'fetch_then_chains' was taken with very minor changes
 ## from remote_pdb_load.py.  The copyright notice is at the bottom of
@@ -250,6 +251,11 @@ def make_pretty():
 def helices():
   make_chains(organism, 'sticks', default_colors['helix'])
 
+## This should ask for the relevant data file and call the
+## cheater perl scripts I wrote
+def 2dhelices():
+  subprocess.Popen([r"2d/make_color_ps.pl"]).wait()
+  
 def make_chains(chains, showastype, showascolor):
   ## Start out figuring out the data file to specify the helices
   ## Currently I just have a stupid if/elif chain for the few species
