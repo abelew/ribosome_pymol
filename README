@@ -15,16 +15,16 @@ The main thing I would like to do with this code is to have a 2d picture
 appear when one selects various helices in the 3d map displaying them in 
 both formats.
 
-All functionality is usable via the plugin/ribosome menu in the python 
-control window.  Most functions in it are also exported to the pymol
-command line interface.These files are intended to make working with ribosomal structures
-easier to work with.  The general idea is that one should be able to
-load a ribosome in the same manner as remote_pdb_load; but then with
-little or no effort be able to identify and work with all of the individual
-molecules with minimal effort.
+These files are intended to make working with ribosomal structures easier
+to work with.  All functionality is usable via the plugin/ribosome menu
+in the python control window.  Most functions in it are also exported to
+the pymol command line interface.
+The general idea is that one should be able to load a ribosome in the
+same manner as remote_pdb_load; but then with little or no effort be
+able to identify and work with all of the individual molecules.
 
 In addition, I made an attempt to annotate the small and large subunit
-RNA helices for the relevant species which include:
+RNA helices for some species including:
 Thermus thermophilus, Haloarcula marismortui, Escherichia coli, and
 Saccharomyces cerevisiae
 
