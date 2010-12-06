@@ -72,34 +72,34 @@ sub Color_File {
 		  next LINE;
 	      } elsif ($color eq '11') {
 		  ## 11 is neon pink
-		  print OUT_PS "0.85 0.30 0.64 setrbgcolor\n";
+		  print OUT_PS "0.85 0.30 0.64 setrgbcolor\n";
 	      } elsif ($color eq '-4') {
 		  ## -4 is purple
-		  print OUT_PS "0.36 0.18 0.64 setrbgcolor\n";
+		  print OUT_PS "0.36 0.18 0.64 setrgbcolor\n";
 	      } elsif ($color eq '-3') {
 		  ## -3 is blue
-		  print OUT_PS "0.08 0.25 1.0 setrbgcolor\n";
+		  print OUT_PS "0.08 0.25 1.0 setrgbcolor\n";
 	      } elsif ($color eq '-2') {
 		  ## -2 is greenblue
-		  print OUT_PS "0.25 0.90 0.92 setrbgcolor\n";
+		  print OUT_PS "0.25 0.90 0.92 setrgbcolor\n";
 	      } elsif ($color eq '-1') {
 		  ## -1 is green
-		  print OUT_PS "0.1 0.90 0.1 setrbgcolor\n";
+		  print OUT_PS "0.1 0.90 0.1 setrgbcolor\n";
 	      } elsif ($color eq '1') {
 		  ## 1 is yellow
-		  print OUT_PS "0.9 0.9 0.15 setrbgcolor\n";
+		  print OUT_PS "0.9 0.9 0.15 setrgbcolor\n";
 	      } elsif ($color eq '2') {
 		  ## 2 is yelloworange
-		  print OUT_PS "0.90 0.60 0.10 setrbgcolor\n";
+		  print OUT_PS "0.90 0.60 0.10 setrgbcolor\n";
 	      } elsif ($color eq '3') {
 		  ## 3 is orangered
-		  print OUT_PS "0.92 0.34 0.08 setrbgcolor\n";
+		  print OUT_PS "0.92 0.34 0.08 setrgbcolor\n";
 	      } elsif ($color eq '4') {
 		  ## 4 is red
-		  print OUT_PS "0.92 0.10 0.10 setrbgcolor\n";
+		  print OUT_PS "0.92 0.10 0.10 setrgbcolor\n";
 	      } else {
 		  ## default is... randomly chosen by me
-		  print OUT_PS "0.57 0.08 0.32 setrbgcolor\n";
+		  print OUT_PS "0.57 0.08 0.32 setrgbcolor\n";
 	      }
 	  }
       }
