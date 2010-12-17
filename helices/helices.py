@@ -474,6 +474,88 @@ def check_names(current, used_names=[]):
     used_names.append(current)
     return current
 
+def get_seq(selection_string):
+  from pymol import stored
+  sequence=[]
+  residues={}
+  one_letter={
+                  "ALA":"A",
+                  "ARG":"R",
+                  "ASN":"N",
+                  "ASP":"D",
+                  "ASX":"B",
+                  "CYS":"C",
+                  "CYH":"C",#protonated cys
+                  "CYX":"C",#cystein
+                  "GLN":"Q",
+                  "GLU":"E",
+                  "GLY":"G",
+                  "GLX":"Z",
+                  "HIS":"H",
+                  "HIP":"H",#protonated
+                  "HID":"H",#h on delta
+                  "HIE":"H",#h on epsilon
+                  "ILE":"I",
+                  "LEU":"L",
+                  "LYS":"K",
+                  "MET":"M",
+                  "MSE":"M",#Seleno- Methionin
+                  "PHE":"F",
+                  "PRO":"P",
+                  "SER":"S",
+                  "THR":"T",
+                  "TRP":"W",
+                  "TYR":"Y",
+                  "VAL":"V",
+                  "UNK":"X",
+                  "A":"A",
+                  "C":"C",
+                  "G":"G",
+                  "T":"T",
+                  "U":"U",
+                  ## Below are residues which can't be added
+                  "MG":"",
+                  "HOH":"",
+                  }
+  stored.residue_names=[]
+  cmd.iterate(selection_string , "stored.residue_names.append(resn)")
+  stored.residue_numbers=[]
+  cmd.iterate(selection_string , "stored.residue_numbers.append(resi)")
+
+  for index in range(len(stored.residue_names)):
+    residues[stored.residue_numbers[index]] = stored.residue_names[index]
+
+#  for key in sorted(residues.keys(),lambda x,y: 1 if x[1] > y[1] else -1):
+#    print "key: %s value: %s" % (key, residues[key])
+
+  result = ""
+  for k in sorted(residues.keys(), cmp=_compare_keys):
+    result += one_letter[residues[k]]
+
+  print result
+
+
+def _compare_keys(x, y):
+  try:
+    x = int(x)
+  except ValueError:
+    xint = False
+  else:
+    xint = True
+  try:
+    y = int(y)
+  except ValueError:
+    if xint:
+      return -1
+    return cmp(x.lower(), y.lower())
+    # or cmp(x, y) if you want case sensitivity.
+  else:
+    if xint:
+      return cmp(x, y)
+    return 1
+    
+  
+
 def define_chain(selection_string, color, mol_name):
   mol_name = check_names(mol_name)
   cmd.create(mol_name, selection_string)
@@ -500,7 +582,7 @@ cmd.extend("delete_ssu_protein", delete_ssu_protein)
 cmd.extend("delete_lsu_helices", delete_lsu_helices)
 cmd.extend("delete_ssu_helices", delete_ssu_helices)
 cmd.extend("delete_all_helices", delete_all_helices)
-
+cmd.extend("get_seq", get_seq)
 # Copyright Notice
 # ================
 # 
