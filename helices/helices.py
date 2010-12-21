@@ -516,6 +516,7 @@ def get_seq(selection_string):
                   ## Below are residues which can't be added
                   "MG":"",
                   "HOH":"",
+                  "OHX":"",
                   }
   stored.residue_names=[]
   cmd.iterate(selection_string , "stored.residue_names.append(resn)")
