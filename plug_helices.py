@@ -6,6 +6,7 @@ import tkFileDialog
 import sys, string, re, os
 helices_path = "C:\Program Files\PyMoL\helices"
 sys.path.append(helices_path)
+
 from pymol import cmd
 from helices.helices import *
 ## This file loads into the pymol menu system and creates 'Ribosome' menu.
