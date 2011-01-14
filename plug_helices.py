@@ -4,9 +4,7 @@ import tkMessageBox
 import tkColorChooser
 import tkFileDialog
 import sys, string, re, os
-helices_path = param,os.environ[HELICES_HOME]
-if (helices_path is None):
-    helices_path = "../../helices"
+helices_path = "C:\Program Files\PyMoL\helices"
 sys.path.append(helices_path)
 from pymol import cmd
 from helices.helices import *
