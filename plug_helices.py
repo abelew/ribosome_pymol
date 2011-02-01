@@ -4,7 +4,8 @@ import tkMessageBox
 import tkColorChooser
 import tkFileDialog
 import sys, string, re, os
-helices_path = "C:\Program Files\PyMoL\helices"
+pymol_data_path = os.getenv("PYMOL_DATA")
+helices_path = pymol_data_path + "/pmg_tk"
 sys.path.append(helices_path)
 
 from pymol import cmd

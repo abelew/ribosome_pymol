@@ -277,6 +277,8 @@ def make_chains(chains, showastype, showascolor):
     chains_filenames = [datadir + 'saccharomyces_helices.txt',]
   elif chains == 'saccharomyces_cerevisiae':
     chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+  elif chains == 'saccharomyces_cerevisiae_s288c':
+    chains_filenames = [datadir + 'saccharomyces_helices.txt',]
   else:
     print "Could not understand the argument:" + chains +", using the wtf file"
     chains_filenames = [datadir + 'wtf.txt',]
@@ -385,9 +387,21 @@ def random_chains(pdb_file, splitp):
     ## will likely be required, and then pull them apart,
     ## select them, and color them, voila.
     line_array = pdb_line.split()
-    line_type = line_array[0]
-    num = line_array[1]
-    chain_mol = line_array[2]
+    try:
+      line_type = line_array[0]
+    except:
+      line_type = "UNKNOWN"
+      print "problem with line_type on:" + pdb_line
+    try:
+      num = line_array[1]
+    except:
+      num = 0
+      print "problem with num on:" + pdb_line
+    try:
+      chain_mol = line_array[2]
+    except:
+      chain_mol = "UNKNOWN"
+      print "problem with chain_mol on:" + pdb_line
     if (chain_mol == 'MOLECULE:'):
       (pre, mol_name) = pdb_line.split(": ")
     if (chain_mol == 'CHAIN:'):
@@ -558,12 +572,17 @@ def _compare_keys(x, y):
   
 
 def define_chain(selection_string, color, mol_name):
+  if color is None:
+    color = "black"
   mol_name = check_names(mol_name)
-  cmd.create(mol_name, selection_string)
-  cmd.show("cartoon", mol_name)
-  cmd.color(color, mol_name)
-  cmd.disable(mol_name)
-  cmd.zoom("all")
+  try:
+    cmd.create(mol_name, selection_string)
+    cmd.show("cartoon", mol_name)
+    cmd.color(color, mol_name)
+    cmd.disable(mol_name)
+    cmd.zoom("all")
+  except:
+    print "There was an error with:" + mol_name
   molecule_list.append(mol_name)
 
 
