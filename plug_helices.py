@@ -3,7 +3,7 @@ import tkSimpleDialog
 import tkMessageBox
 import tkColorChooser
 import tkFileDialog
-import sys, string, re, os
+import sys, string, re, os, csv
 pymol_data_path = os.getenv("PYMOL_DATA")
 helices_path = pymol_data_path + "/pmg_tk"
 sys.path.append(helices_path)
@@ -50,40 +50,68 @@ def __init__(self):
                              command = lambda: delete_lsu_helices())
     self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_helices', label='SSU_helices',
                              command = lambda: delete_ssu_helices())
-    self.menuBar.addcascademenu('Ribosome','Specific Ribosomes')
-    self.menuBar.addcascademenu('Specific Ribosomes','Saccharomyces cerevisiae')
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Beckmann 2010', label='Beckmann 2010', command = lambda: fetch("3IZS",""))
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Beckmann 2009', label='Beckmann 2009', command = lambda: fetch("2WW9",""))
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Yusupov 2010', label='Yusupov 2010', command = lambda: fetch("3O2Z",""))
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Doudna 2009', label='Doudna 2009', command = lambda: fetch("3FRX",""))
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Frank 2008_eEF2', label='Frank 2008_eEF2', command = lambda: fetch("3DNY",""))
-    self.menuBar.addmenuitem('Saccharomyces cerevisiae', 'command', 'Spahn 2007_IRES', label='Spahn 2007_IRES', command = lambda: fetch("2NOQ",""))
-    self.menuBar.addcascademenu('Specific Ribosomes','Thermus thermophilus')
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2010-1', label='Ramakrishnan 2010-1', command = lambda: fetch("2XQD",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2010-2', label='Ramakrishnan 2010-2', command = lambda: fetch("2XFZ",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2010-3', label='Ramakrishnan 2010-3', command = lambda: fetch("2X9R",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2009-1', label='Ramakrishnan 2009-1', command = lambda: fetch("3KIQ",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2009-2', label='Ramakrishnan 2009-2', command = lambda: fetch("2WRI",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2009-3', label='Ramakrishnan 2009-3', command = lambda: fetch("2WRN",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2009-4', label='Ramakrishnan 2009-4', command = lambda: fetch("2WH1",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2009-5', label='Ramakrishnan 2009-5', command = lambda: fetch("2WDG",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Spahn 2009', label='Spahn 2009', command = lambda: fetch("3FIC",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2007-1', label='Ramakrishnan 2007-1', command = lambda: fetch("2UXD",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2007-2', label='Ramakrishnan 2007-2', command = lambda: fetch("2V46",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2007-3', label='Ramakrishnan 2007-3', command = lambda: fetch("2UUC",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2006-1', label='Ramakrishnan 2006-1', command = lambda: fetch("2J00",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2006-2', label='Ramakrishnan 2006-2', command = lambda: fetch("2B64",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2006-3', label='Ramakrishnan 2006-3', command = lambda: fetch("2B9M",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2006-4', label='Ramakrishnan 2006-4', command = lambda: fetch("2B9P",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2004-1', label='Ramakrishnan 2004-1', command = lambda: fetch("1XM0",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Ramakrishnan 2004-2', label='Ramakrishnan 2004-2', command = lambda: fetch("1XNR",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Jogl 2010', label='Jogl 2010', command = lambda: fetch("3OTO",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Noller 2008', label='Noller 2008', command = lambda: fetch("3F1E",""))
-    self.menuBar.addmenuitem('Thermus thermophilus', 'command', 'Noller 2007', label='Noller 2007', command = lambda: fetch("2OW8",""))
-    self.menuBar.addcascademenu('Specific Ribosomes','Escherichia coli')
-    self.menuBar.addmenuitem('Escherichia coli', 'command', 'Frank 2009', label='Frank 2009', command = lambda: fetch("3F1H",""))
-    self.menuBar.addcascademenu('Specific Ribosomes','Thermomyces languinosus')
-    self.menuBar.addmenuitem('Thermomyces languinosus', 'command', 'Frank 2009', label='Frank 2009', command = lambda: fetch("3JYV",""))
-
     self.menuBar.addmenuitem('Ribosome','command','2dHelices',label='2dHelices',command = lambda: twod_helices())
+    specific_ribosome_menu(self)
 
+def specific_ribosome_menu(self):
+    infile = datadir + "/structures.csv"
+    ribosome_species = dict({})
+    ribosome_years = dict({})
+    ribosome_authors = dict({})
+
+    csvfile = open(infile)
+    dialect = csv.Sniffer().sniff(csvfile.read())
+    csvfile.seek(0)
+    reader = csv.reader(csvfile, dialect)
+
+    for datum in reader:
+#        if re.compile('^#').search(data_line) is not None:
+#            continue
+#        datum = line.split()
+        species = datum[0]
+        author = datum[1]
+        year = datum[2]
+        accession = datum[3]
+        title = datum[4]
+        if species not in ribosome_species:
+#        if ribosome_species[species] is None:
+            ribosome_species[species] = [[species,author,year,accession,title]]
+        else:
+            ribosome_species[species].append([species,author,year,accession,title])
+
+        if year not in ribosome_years:
+#       if ribosome_years[year] is None:
+            ribosome_years[year] = [[species,author,year,accession,title]]
+        else:
+            ribosome_years[year].append([species,author,year,accession,title])
+#        if ribosome_authors[author] is None:
+
+        if author not in ribosome_authors:
+            ribosome_authors[author] = [[species,author,year,accession,title]]
+        else:
+            ribosome_authors[author].append([species,author,year,accession,title])
+
+
+    self.menuBar.addcascademenu('Ribosome','Ribosomes by Species')
+    for spec in sorted(ribosome_species.keys()):
+        self.menuBar.addcascademenu('Ribosomes by Species', spec)
+        entry_list = ribosome_species[spec]
+        for entry in entry_list:
+            entry_name = entry[1] + "-" + entry[2] + "-" + entry[3]
+            self.menuBar.addmenuitem(spec, 'command', entry_name, label=entry_name, command = lambda: fetch(entry[3], ""))
+
+    self.menuBar.addcascademenu('Ribosome','Ribosomes by Year')
+    for year in sorted(ribosome_years.keys()):
+        self.menuBar.addcascademenu('Ribosomes by Year', year)
+        year_list = ribosome_years[year]
+        for entry in year_list:
+            entry_name = entry[1] + "-" + entry[0] + "-" + entry[3]
+            self.menuBar.addmenuitem(year, 'command', entry_name, label=entry_name, command = lambda: fetch(entry[3], ""))
+
+    self.menuBar.addcascademenu('Ribosome','Ribosomes by Author')
+    for author in sorted(ribosome_authors.keys()):
+        self.menuBar.addcascademenu('Ribosomes by Author', author)
+        author_list = ribosome_authors[author]
+        for entry in author_list:
+            entry_name = entry[2] +  "-" + entry[0] + "-" + entry[3]
+            self.menuBar.addmenuitem(author, 'command', entry_name, label=entry_name, command = lambda: fetch(entry[3], ""))
