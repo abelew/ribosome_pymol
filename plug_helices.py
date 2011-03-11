@@ -75,21 +75,21 @@ def specific_ribosome_menu(self):
         title = datum[4]
         if species not in ribosome_species:
 #        if ribosome_species[species] is None:
-            ribosome_species[species] = [[species,author,year,accession,title]]
+            ribosome_species[species] = [(species,author,year,accession,title)]
         else:
-            ribosome_species[species].append([species,author,year,accession,title])
+            ribosome_species[species].append((species,author,year,accession,title))
 
         if year not in ribosome_years:
 #       if ribosome_years[year] is None:
-            ribosome_years[year] = [[species,author,year,accession,title]]
+            ribosome_years[year] = [(species,author,year,accession,title)]
         else:
-            ribosome_years[year].append([species,author,year,accession,title])
+            ribosome_years[year].append((species,author,year,accession,title))
 #        if ribosome_authors[author] is None:
 
         if author not in ribosome_authors:
-            ribosome_authors[author] = [[species,author,year,accession,title]]
+            ribosome_authors[author] = [(species,author,year,accession,title)]
         else:
-            ribosome_authors[author].append([species,author,year,accession,title])
+            ribosome_authors[author].append((species,author,year,accession,title))
 
 
     self.menuBar.addcascademenu('Ribosome','Ribosomes by Species')
@@ -98,13 +98,17 @@ def specific_ribosome_menu(self):
         entry_list = ribosome_species[spec]
         for entry in entry_list:
             entry_name = entry[1] + "-" + entry[2] + "-" + entry[3]
-            self.menuBar.addmenuitem(spec, 'command', entry_name, label=entry_name, command = lambda: fetch(entry[3], ""))
+            tmp_pdbid = entry[3]
+#            self.menuBar.addmenuitem(spec, 'command', entry_name, label=entry_name, command = lambda: fetch(tmp_pdbid, ""))
+            self.menuBar.addmenuitem(spec, 'command', tmp_pdbid, label=entry_name, command = lambda s=entry : check_fetch(s))
 
     self.menuBar.addcascademenu('Ribosome','Ribosomes by Year')
     for year in sorted(ribosome_years.keys()):
         self.menuBar.addcascademenu('Ribosomes by Year', year)
         year_list = ribosome_years[year]
         for entry in year_list:
+#            tmp_pdbid = entry[3]
+#            tmp_entry = entry
             entry_name = entry[1] + "-" + entry[0] + "-" + entry[3]
             self.menuBar.addmenuitem(year, 'command', entry_name, label=entry_name, command = lambda: fetch(entry[3], ""))
 

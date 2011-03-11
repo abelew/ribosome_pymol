@@ -145,6 +145,11 @@ class fetch_then_chains:
       pdbCode = string.upper(pdbCode)
       fetch(pdbCode,"")
 
+def check_fetch(information):
+  mymessage = "The pdb " + information[3] + ", species: " + str(information[0]) + " came from the " + str(information[1]) + " lab in " + str(information[2]) + " described by:\n" + str(information[4]) + "\nClick 'yes' if you wish to view this pdb file."
+  response = tkMessageBox.askyesno(title=information[3],message=mymessage)
+  if response:
+    fetch(information[3],"")
 
 def fetch(pdb, splitp):
   import urllib
