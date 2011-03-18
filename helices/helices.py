@@ -573,8 +573,6 @@ def _compare_keys(x, y):
     if xint:
       return cmp(x, y)
     return 1
-    
-  
 
 def define_chain(selection_string, color, mol_name):
   if color is None:
@@ -590,7 +588,134 @@ def define_chain(selection_string, color, mol_name):
     print "There was an error with:" + mol_name
   molecule_list.append(mol_name)
 
+## The following functions were mostly taken from 
+## Robert L. Campbell's 2004 color_by_restype.py
+## which appears to no longer work
+## I am changing it to (hopefully) work with pymol 1.3
+def color_by_aa_residue_type(selection="all"):
+  residue_abbrev = {
+  'A': 'ALA', 
+  'C': 'CYS', 
+  'D': 'ASP', 
+  'E': 'GLU', 
+  'F': 'PHE', 
+  'G': 'GLY', 
+  'H': 'HIS', 
+  'I': 'ILE', 
+  'K': 'LYS', 
+  'L': 'LEU', 
+  'M': 'MET', 
+  'N': 'ASN', 
+  'P': 'PRO', 
+  'Q': 'GLN', 
+  'R': 'ARG', 
+  'S': 'SER', 
+  'T': 'THR', 
+  'V': 'VAL', 
+  'W': 'TRP', 
+  'Y': 'TYR',
+  }
+  abbrev_to_type = {
+    'A': 'hydrophobic',
+    'ALA' : 'hydrophobic',
+    'C': 'cysteine',
+    'CYS' : 'cysteine',
+    'D': 'negative',
+    'ASP' : 'negative',
+    'E': 'negative',
+    'GLU' : 'negative',
+    'F': 'aromatic',
+    'PHE' : 'aromatic',
+    'G': 'hydrophobic',
+    'GLY' : 'hydrophobic',
+    'H': 'polar',
+    'HIS' : 'polar',
+    'I': 'hydrophobic',
+    'ILE' : 'hydrophobic',
+    'K': 'positive',
+    'LYS' : 'positive',
+    'L': 'hydrophobic',
+    'LEU' : 'hydrophobic',
+    'M': 'hydrophobic',
+    'MET' : 'hydrophobic',
+    'N': 'polar',
+    'ASN' : 'polar',
+    'P': 'proline',
+    'PRO' : 'proline',
+    'Q': 'polar',
+    'GLN' : 'polar',
+    'R': 'positive',
+    'ARG' : 'positive',
+    'S': 'polar',
+    'SER' : 'polar',
+    'T': 'polar',
+    'THR' : 'polar',
+    'V': 'hydrophobic',
+    'VAL' : 'hydrophobic',
+    'W': 'aromatic',
+    'TRP' : 'aromatic',
+    'Y': 'aromatic',
+    'TYR' : 'aromatic',
+    }
+  type_colors = {
+    'hydrophobic' : 'grey70',
+    'aromatic' : 'lightmagenta',
+    'polar' : 'teal',
+    'positive' : 'blue',
+    'negative' : 'red',
+    'cysteine' : 'yellow',
+    'proline' : 'green',
+    }
+  for aa in residue_abbrev:
+    amino_acid = residue_abbrev[aa]
+    sel = selection + " and resn %s" % amino_acid
+    chosen_color = type_colors[abbrev_to_type[aa]]
+    cmd.select("temp", sel)
+    cmd.color(chosen_color, "temp")
+  for type in type_colors:
+    print "Coloring " + type + " residues " + type_colors[type]
 
+
+def color_by_amino_acid(selection="all"):
+  residue_colors = {
+  'ALA':'gray40',
+  'CYS':'yellow',
+  'ASP':'red', 
+  'GLU':'tv_red',
+  'PHE':'deepblue', 
+  'GLY':'gray80',
+  'HIS': 'lightblue',
+  'ILE':'forest',
+  'LYS':'blue',
+  'LEU':'green',
+  'MET':'tv_yellow',
+  'ASN':'cyan',
+  'PRO':'yelloworange',
+  'GLN':'palecyan',
+  'ARG':'tv_blue',
+  'SER':'orange',
+  'THR':'tv_orange',
+  'VAL':'splitpea',
+  'TRP':'purple',
+  'TYR':'density',
+  'A':'blue',
+  'G':'gray50',
+  'C':'red',
+  'U':'green',
+  'T':'green',
+  }
+  for aa in residue_abbrev:
+    amino_acid = residue_abbrev[aa]
+    sel = selection + " and resn %s" % amino_acid
+    chosen_color = type_colors[abbrev_to_type[aa]]
+    cmd.select("temp", sel)
+    cmd.color(chosen_color, "temp")
+  for type in type_colors:
+    print "Coloring " + type + " residues " + type_colors[type]
+
+
+cmd.extend("color_by_amino_acid", color_by_amino_acid)
+cmd.extend("color_by_aa_residue_type", color_by_aa_residue_type)
 cmd.extend("chain_color", chain_color)
 cmd.extend("make_pretty", make_pretty)
 cmd.extend("make_chains", make_chains)
