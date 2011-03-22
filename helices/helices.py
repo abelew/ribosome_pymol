@@ -498,45 +498,45 @@ def get_seq(selection_string):
   sequence=[]
   residues={}
   one_letter={
-                  "ALA":"A",
-                  "ARG":"R",
-                  "ASN":"N",
-                  "ASP":"D",
-                  "ASX":"B",
-                  "CYS":"C",
-                  "CYH":"C",#protonated cys
-                  "CYX":"C",#cystein
-                  "GLN":"Q",
-                  "GLU":"E",
-                  "GLY":"G",
-                  "GLX":"Z",
-                  "HIS":"H",
-                  "HIP":"H",#protonated
-                  "HID":"H",#h on delta
-                  "HIE":"H",#h on epsilon
-                  "ILE":"I",
-                  "LEU":"L",
-                  "LYS":"K",
-                  "MET":"M",
-                  "MSE":"M",#Seleno- Methionin
-                  "PHE":"F",
-                  "PRO":"P",
-                  "SER":"S",
-                  "THR":"T",
-                  "TRP":"W",
-                  "TYR":"Y",
-                  "VAL":"V",
-                  "UNK":"X",
-                  "A":"A",
-                  "C":"C",
-                  "G":"G",
-                  "T":"T",
-                  "U":"U",
-                  ## Below are residues which can't be added
-                  "MG":"",
-                  "HOH":"",
-                  "OHX":"",
-                  }
+    "ALA":"A",
+    "ARG":"R",
+    "ASN":"N",
+    "ASP":"D",
+    "ASX":"B",
+    "CYS":"C",
+    "CYH":"C",#protonated cys
+    "CYX":"C",#cystein
+    "GLN":"Q",
+    "GLU":"E",
+    "GLY":"G",
+    "GLX":"Z",
+    "HIS":"H",
+    "HIP":"H",#protonated
+    "HID":"H",#h on delta
+    "HIE":"H",#h on epsilon
+    "ILE":"I",
+    "LEU":"L",
+    "LYS":"K",
+    "MET":"M",
+    "MSE":"M",#Seleno- Methionin
+    "PHE":"F",
+    "PRO":"P",
+    "SER":"S",
+    "THR":"T",
+    "TRP":"W",
+    "TYR":"Y",
+    "VAL":"V",
+    "UNK":"X",
+    "A":"A",
+    "C":"C",
+    "G":"G",
+    "T":"T",
+    "U":"U",
+    ## Below are residues which can't be added
+    "MG":"",
+    "HOH":"",
+    "OHX":"",
+    }
   stored.residue_names=[]
   cmd.iterate(selection_string , "stored.residue_names.append(resn)")
   stored.residue_numbers=[]
