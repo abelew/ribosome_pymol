@@ -7,6 +7,7 @@ import os, sys, string, re
 import urllib
 import gzip
 import subprocess
+import platform
 from pymol import stored, cmd, selector
 ## The function 'fetch_then_chains' was taken with very minor changes
 ## from remote_pdb_load.py.  The copyright notice is at the bottom of
@@ -43,6 +44,18 @@ default_colors = {
 ## The delete_ functions do just that, delete the various molecules associated
 ## with them.  The protein and helices functions do some very simplistic
 ## string.find calls to identify the helices and proteins.
+def edit_ribosomes():
+  my_type = platform.system()
+  ribosomes_path = datadir + "/structures.csv"
+  open_command = ""
+  if my_type == "Linux":
+    open_command = "openoffice"
+  elif my_type == "MacOS":
+    open_command = "open"
+  elif my_type == "Windows":
+    open_command = "explorer"
+  os.system(open_command + " " + ribosomes_path)
+
 def delete_all_helices():
   delete_ssu_helices
   delete_lsu_helices
@@ -713,7 +726,49 @@ def color_by_amino_acid(selection="all"):
   for type in type_colors:
     print "Coloring " + type + " residues " + type_colors[type]
 
+def find_neighbors(sel_one, sel_two, distance = 3, selection_name = "neighbors", pairs_mode = 0):
+  print "Looking for pairs using a distance of " + str(distance) + "." + sel_one + " " + sel_two
+  pairs_list = cmd.find_pairs("(" + sel_one + ")", "(" + sel_two + ")", mode = pairs_mode, cutoff = float(distance))
+  for pairs in pairs_list:
+#    cmd.iterate("%s and index %s" % (pairs[0][0],pairs[0][1]), 'print "chain: %s residue_name: %3s residue_num: %s name: %s " % (chain,resn,resi,name),')
+#    cmd.iterate("%s and index %s" % (pairs[1][0],pairs[1][1]), 'print "chain: %s residue_name: %3s residue_num: %s name: %s " % (chain,resn,resi,name),')
+    print sel_one,
+    cmd.iterate("%s and index %s" % (pairs[0][0], pairs[0][1]), 'print "%s%s, %s === " % (resi, resn, name),')
+    print sel_two,
+    cmd.iterate("%s and index %s" % (pairs[1][0], pairs[1][1]), 'print "%s%s, %s." % (resi, resn, name),')
+    print " %.2f" % cmd.distance(selection_name,"%s and index %s" % (pairs[0][0],pairs[0][1]),"%s and index %s" % (pairs[1][0],pairs[1][1]))
+  cmd.show("dashes", selection_name)
+  cmd.show("labels", selection_name)
+  cmd.color("magenta", selection_name)
+  cmd.zoom(selection_name)
 
+# enabled_objs = cmd.get_names("all",enabled_only=1)
+def protein_rna_interactions():
+  rna_list = []
+  lsu_protein_list = []
+  ssu_protein_list = []
+  for mol in molecule_list:
+    if mol.find('RRNA') > -1:
+      print "Found " + mol
+      rna_list.append(mol)
+    elif mol.find('LSU_S') > -1:
+      print "Found " + mol
+      lsu_protein_list.append(mol)
+    elif mol.find('SSU_S') > -1:
+      print "Found " + mol
+      ssu_protein_list.append(mol)
+
+    for prot in lsu_protein_list:
+      for rna in rna_list:
+        print "Searching " + prot + " against " + rna
+        find_neighbors(prot, rna)
+    for prot in ssu_protein_list:
+      for rna in rna_list:
+        print "Searching " + prot + " against " + rna
+        find_neighbors(prot, rna)
+
+cmd.extend("protein_rna_interactions", protein_rna_interactions)
+cmd.extend("find_neighbors", find_neighbors)
 cmd.extend("color_by_amino_acid", color_by_amino_acid)
 cmd.extend("color_by_aa_residue_type", color_by_aa_residue_type)
 cmd.extend("chain_color", chain_color)

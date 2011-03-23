@@ -51,6 +51,8 @@ def __init__(self):
     self.menuBar.addmenuitem('Delete objects', 'command', 'SSU_helices', label='SSU_helices',
                              command = lambda: delete_ssu_helices())
     self.menuBar.addmenuitem('Ribosome','command','2dHelices',label='2dHelices',command = lambda: twod_helices())
+    self.menuBar.addmenuitem('Ribosome','command','Get_Sequence',label='Get_Sequence',command = lambda: get_seq())
+    self.menuBar.addmenuitem('Ribosome','command','Edit_Ribosomes',label='Edit_Ribosomes',command = lambda: edit_ribosomes())
     specific_ribosome_menu(self)
 
 def specific_ribosome_menu(self):
@@ -58,7 +60,6 @@ def specific_ribosome_menu(self):
     ribosome_species = dict({})
     ribosome_years = dict({})
     ribosome_authors = dict({})
-
     csvfile = open(infile)
     dialect = csv.Sniffer().sniff(csvfile.read())
     csvfile.seek(0)
