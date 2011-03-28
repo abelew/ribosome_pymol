@@ -1,0 +1,122 @@
+CLUSTAL 2.0.12 multiple sequence alignment
+
+
+E.coli            ------------------------------------------------------------
+S.cerevisiae      UAUCUGGUUGAUCCUGCCAGUAGUCAUAUGCUUGUCUCAAAGUUAAGCCAUGCAUGUCUA
+                                                                              
+
+E.coli            ----------------------------------------UGAAG-AGUU-UGAUCAUGG
+S.cerevisiae      AGUAUAAGCAAUUUAUACAGUGAAACUGCGAAUGGCUCAUUAAAUCAGUUAUGUUUAUUU
+                                                          * **  **** ** * **  
+
+E.coli            CUCAGAU-UGAACGCUGGCGGCA-----GGCCUAACACAUGC--AAGUCGAACGGUAACA
+S.cerevisiae      GAUAGACAUGGAUAACCGUGGUAUUCUAGAGCUAAUACAUGCUUAAAAUCUCGACCCUUU
+                     ***  ** *     * ** *     *  **** ******  **              
+
+E.coli            GGAAGAAGCUUGCUUCUUUGCUGACGAGUGG-------CGGACGGGUGAGUAAUGUCUGG
+S.cerevisiae      GGAAGAGAUGUAUUUAUUAGAUAAAAAAUCAAUGUCUUCGGACUCUUUGAUGAUUCAUAA
+                  ******    *  ** ** * * *  * *         *****   *   * **   *  
+
+E.coli            GAAACUGCCUGAUGGAGGGGGAUAACUACUGGAAACGGUAGCUAAUACCGCAUAACGUCG
+S.cerevisiae      UAACUUUUCGAAUCGCAUGGCCUUG-UGCUGGCGAUGGUUCAUUCAAAUUUCUGCCCUAU
+                   **  *  *  ** *   **  *   * ****  * ***   *   *     *  * *  
+
+E.coli            CAAGACCAAAGAGGGGGACCUUCGGGCC-UCUUGCCAUCGGAUGUGCCCAGAUGGGAUUA
+S.cerevisiae      CAACUUGAUGGUAGGAUAGUGGCCUACCAUGGUUUCAACGGGUACGGGGAAUAAGGGUUC
+                  ***    *  *  **  *    *   ** *  *  ** *** *  *   *    ** ** 
+
+E.coli            GCU--------AGUAGGUGGGGUAACGGCU--CACCU-------AGGCGACGAUCCC---
+S.cerevisiae      GAUUCCGGAGAGGGAGCCUGAGAAACGGCUACCACAUCCAAGGAAGGCAGCAGGCGCGCA
+                  * *         * **   * * *******  *** *       ****  *   * *   
+
+E.coli            ---UAGCUGGUCUGAGA--GGAUGACCAGCCACACUGGA-ACUGAGACACGGUCCA---G
+S.cerevisiae      AAUUACCCAAUCCUAAUUCAGGGAGGUAGUGACAAUAAAUAACGAUACAGGGCCCAUUCG
+                     ** *   **  *     *      **  *** *  * *  ** *** ** ***   *
+
+E.coli            ACUCCUACGGGAGGCAGCAGUG----GGGAAUAUU--------GCACAAU-GGGCGCAAG
+S.cerevisiae      GGUCUUGUAAUUGGAAUGAGUACAAUGUAAAUACCUUAACGAGGAACAAUUGGAGGCAAG
+                    ** *      ** *  ***     *  ****          * ***** **  *****
+
+E.coli            CCUGAUGCAGCCAUGCCGCGUGUAUGAAGAAGGCCUU--CGGGUUGUAAAGUACUUUCAG
+S.cerevisiae      UCUGGUGCCAGCA-GCCGCGGUAAUUCCAGCUCCAAUAGCGUAUAUUAAAGUUGUUGCAG
+                   *** ***   ** ******   **        *  *  **  *  ******  ** ***
+
+E.coli            CGGGGAGGAAGGGAGUAAAGUUAAUACC---UUUGCUCAUUGACGUUACCCGCAGAA-GA
+S.cerevisiae      UUAAAAAGCUCGUAGUUGACUUUGGGCCCGGUUGGCCGGUCCGAUUUUUUCGUGUACUGG
+                       * *   * ***  * **    **   ** **   *     **   **   *  * 
+
+E.coli            AGCACCGGCUAA-------CUCCGUGCCAGC----AGCCGCGGUAAUACGGAGGGUGCAA
+S.cerevisiae      AUUUCCAACGGGGCCUUUCCUUCUGGCUAACCUUGAGUCCUUGUGGCUCUUGGCGAACCA
+                  *   **  *          ** *  ** * *    ** *   **    *   * *  * *
+
+E.coli            G--CGUUAAUCGGAAUUACU--GGGCGUAAAGCGCACGCAGGCGGUUUGUUAAGUCAGAU
+S.cerevisiae      GGACUUUACUUUGAAAAAAUUAGAGUGUUCAAAGCAGGCGUAUUGCUCGAAUAUAUUAGC
+                  *  * *** *  ***  * *  * * **  *  *** **     * * *   *       
+
+E.coli            GUGAAAUCCCCGGGCUCAACCUGGGAACU---------GCAUCUGAUACUG--GCAAGCU
+S.cerevisiae      AUGGAAUAAUAGAAUAGGACUUUGGUUCUAUUUUGUUGGUUUCUAGGACCAUCGUAAUGA
+                   ** ***    *      ** * **  **         *  ***   **    * **   
+
+E.coli            UGAGUCUCGUAGAGGGGGGUAGAAUUCCAGGUGUAGCGGUGAAAUGCGUAGAGAUCUGGA
+S.cerevisiae      UUAGGGACGGUCGGGGGCAUCGGUAUUCAAUUGUCGAGGUGAAAUUCUUGGAUUUAUUGA
+                  * **   **    ****  * *   * **  *** * ******** * * **  * * **
+
+E.coli            GGAAUACCGGUGGCGAAGGCGGCCCCCUGGACGAAGACUGACGCUCAGGUGCGAAAGCGU
+S.cerevisiae      AGACUAACUACUGCGAAAGCAUUUGCCAAGGACGUUUUCAUUAAUCAAGAACGAAAGUUA
+                   ** ** *    ***** **     **  *              *** *  ******   
+
+E.coli            GGGGAGCAAACAGGAUUAGAUACCCUGGUAGUCCACGCCGUAAACGAUGUCGACUUGG--
+S.cerevisiae      GGGGAUCGAAGAUGAUCUGGUACCGUCGUAGUCUUAACCAUAAACUAUGCCGACUAGAUC
+                  ***** * ** * ***  * **** * ******    ** ***** *** ***** *   
+
+E.coli            AGGUUGUGCCCUUGAGGCGUGGCUUCCGGAGCUAACGCG----UUAAGUCGACCGCCUGG
+S.cerevisiae      GGGUGGUGUUUUUUUAAUGACCACUCGGUACCUUACGAGAAAUCAAAGUCGGUUCUGGGG
+                   *** ***   **     *     ** * * ** *** *      ******       **
+
+E.coli            GGAGUACGGCCGCAAGGUUAAAACUCAAAUGAAUUGACGGGGGCCCGCACAAGCGGUGGA
+S.cerevisiae      GGAGUAUGGUCGCAAGGCUGAAACUUAAAGGAAUUGACGGAAGGGCACCCUAGGAGUGGA
+                  ****** ** ******* * ***** *** **********  *  * * * **  *****
+
+E.coli            GCAUGUGGUUUAAUUCGAUGCAACGCGAAGAACCUUACCUGGUCUUGACAUCCACGGAAG
+S.cerevisiae      GCCUGCGGCU-AAUUUGACUCAACACGGGGAAACUCACCAGGUCCAGACA-CAAUAAGGA
+                  ** ** ** * **** **  **** **  *** ** *** ****  **** * *      
+
+E.coli            UUUUCAGAGAUGAGAAUGUGCCUUCGGGAACCGUGAGACAGGUGCUGCAUGGCUGUCGUC
+S.cerevisiae      UUGACAGAU-UGAGAGC---UCUUUCUUGAUUUUGUGGGUGGUGGUGCAUGGCCGUUUCU
+                  **  ****  *****      ***     *   ** *   **** ******** **    
+
+E.coli            AGCUCGUGUUGUGAAAUGUUGGGUUAAGUCCCGCAACGAGCGCAACCCUUAUCCUUU---
+S.cerevisiae      AGUUGGUGGAGUGAUUUGUCUGCUUAAUUGCGAUAACGAACGAGACCUUAACCUACUAAA
+                  ** * ***  ****  ***  * **** * *   ***** **  *** * * *   *   
+
+E.coli            ----GUUGCCAGCGGU--CCGGCCGGGAACUCA--AAGGAGACUGCCAGUGAUAAACUGG
+S.cerevisiae      UAGUGGUGCUAGCAUUUGCUGGUUAUCCACUUCUUAGAGGGACUAUCGGUUUCAAGCCGA
+                      * *** ***  *  * **      ***    *  * ****  * **   ** * * 
+
+E.coli            AGGAAGGUGGGGAUGACGUCAAGUCAUCAUGGCCCUUACGACCAGGGCUACACACGUGCU
+S.cerevisiae      UGGAAGUUUGAGGCAAUAACAGGUCUGUAUGCCCUUAACGUUCUGGGCCGCACGCGCGCU
+                   ***** * * *   *   ** ***   *** ** * ***  * ****  *** ** ***
+
+E.coli            ACAAUGGCGCAUACAAAGAG---AAGCGACCUCGCGAGAGCAAGCGGACCUCAUAAAG-U
+S.cerevisiae      ACACUGACGGAGCCAGCGAGUCUAACCUUGGCCGAGAGGUCUUGGUAAUCUUGUGAAACU
+                  *** ** ** *  **  ***   ** *     ** ***  *  *   * **  * **  *
+
+E.coli            GCGUCGUAGUCCGGAUUGGAGUCUGCAACUCGACUCCAUGAAGUCGGAAUCGCUAGUAAU
+S.cerevisiae      CCGUCGUGCUGGGGAUAGAGCAUUGUAAUUAUUGCUCUUCAACGAGGAAUUCCUAGUAAG
+                   ******  *  **** *     ** ** *      * * **   *****  ******* 
+
+E.coli            CGUGGAUCAGAAUGCCACGGUGAAUACGUUCCCGGGCCUUGUACACACCGCCCGUCAC--
+S.cerevisiae      CGCAAGUCAUCAGCUUGCGUUGAUUACGUCCCUGCCCUUUGUACACACCGCCCGUCGCUA
+                  **    ***  *     ** *** ***** ** *  * ****************** *  
+
+E.coli            --ACCAUGGGAGUGGGUUG-------------------CAAAAGAAGUAGGUAGCUUAAC
+S.cerevisiae      GUACCGAUUGAAUGGCUUAGUGAGGCCUCAGGAUCUGCUUAGAGAAGGGGGCAACUCCAU
+                    ***    ** *** **                      * *****  ** * **  * 
+
+E.coli            CUUCGGGAGGGCGCUU---ACCA-CUUUGUGAUUCAUGACUGGGGUGAAGUCGUAACAAG
+S.cerevisiae      CUCAGAGCGGAGAAUUUGGACAAACUUGGUCAUUUA-GAGGAACUAAAAGUCGUAACAAG
+                  **  * * **    **   ** * *** ** *** * **        *************
+
+E.coli            GUAACCGUAGGGGAACCUGCGGUUGGAUCA
+S.cerevisiae      GUUUCCGUAGGUGAACCUGCGGAAGGAUCA
+                  **  ******* **********  ******
