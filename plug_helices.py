@@ -37,6 +37,13 @@ default_colors = {
   'RNA' : 'gray60',
   'other' : 'red'
 }
+global small_subunit_sizes
+global large_subunit_sizes
+## Small subunit should have full subunit, bacterial then eukaryotic
+## Then the RNA bacterial/euk
+small_subunit_sizes = ['40S', '30S', '16S', '18S']
+## Large subunit should be full bac/euk, then the big RNA, then little
+large_subunit_sizes = ['60S', '50S', '25S', '23S', '5.8S', '5S']
 ## The function 'fetch_then_chains' was taken with very minor changes
 ## from remote_pdb_load.py.  The copyright notice is at the bottom of
 ## this file as well as the README
