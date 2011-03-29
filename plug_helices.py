@@ -37,13 +37,18 @@ default_colors = {
   'RNA' : 'gray60',
   'other' : 'red'
 }
-global small_subunit_sizes
-global large_subunit_sizes
 ## Small subunit should have full subunit, bacterial then eukaryotic
 ## Then the RNA bacterial/euk
-small_subunit_sizes = ['40S', '30S', '16S', '18S']
 ## Large subunit should be full bac/euk, then the big RNA, then little
-large_subunit_sizes = ['60S', '50S', '25S', '23S', '5.8S', '5S']
+global small_subunit_rnas
+global large_subunit_rnas
+global small_subunit_prot
+global large_subunit_prot
+small_subunit_rnas = ['18S', '16S']
+large_subunit_rnas = ['25S', '23S', '5.8S', '5S']
+small_subunit_prot = ['40S', '30S']
+large_subunit_prot = ['60S', '50S', 'RACK']
+
 ## The function 'fetch_then_chains' was taken with very minor changes
 ## from remote_pdb_load.py.  The copyright notice is at the bottom of
 ## this file as well as the README
@@ -51,12 +56,6 @@ large_subunit_sizes = ['60S', '50S', '25S', '23S', '5.8S', '5S']
 ## Set up the directory where the data files live and some global variables
 ## which will be used to store the names of the molecules and helices from the
 ## PDB files.
-
-## The delete_ functions do just that, delete the various molecules associated
-## with them.  The protein and helices functions do some very simplistic
-## string.find calls to identify the helices and proteins.
-
-
 
 ## This function loads into the pymol menu system and creates 'Ribosome' menu.
 def __init__(self):
@@ -108,6 +107,11 @@ def __init__(self):
     specific_ribosome_menu(self)
 
 def specific_ribosome_menu(self):
+    """
+    specific_ribosome_menu:
+    Called by init to load ribosomes by year/species/author using a CSV spreadsheet
+    in the 'data' directory.
+    """
     infile = datadir + "structures.csv"
     ribosome_species = dict({})
     ribosome_years = dict({})
@@ -138,7 +142,6 @@ def specific_ribosome_menu(self):
         else:
             ribosome_authors[author].append((species,author,year,accession,title))
 
-
     self.menuBar.addcascademenu('Ribosome','Ribosomes by Species')
     for spec in sorted(ribosome_species.keys()):
         self.menuBar.addcascademenu('Ribosomes by Species', spec)
@@ -165,97 +168,140 @@ def specific_ribosome_menu(self):
 
 
 def edit_ribosomes():
-  my_type = platform.system()
-  ribosomes_path = datadir + "structures.csv"
-  open_command = ""
-  if my_type == "Linux":
-    open_command = "openoffice.org"
-  elif my_type == "MacOS":
-    open_command = "open"
-  elif my_type == "Windows":
-    open_command = "explorer"
-  os.system(open_command + " " + ribosomes_path + " &")
+    """
+    edit_ribosomes: Opens the ribosome database in openoffice/excel
+    """
+    my_type = platform.system()
+    ribosomes_path = datadir + "structures.csv"
+    open_command = ""
+    if my_type == "Linux":
+        open_command = "openoffice.org"
+    elif my_type == "MacOS":
+        open_command = "open"
+    elif my_type == "Windows":
+        open_command = "explorer"
+    os.system(open_command + " " + ribosomes_path + " &")
 ## End of edit_ribosomes
 
 
 def delete_all_helices():
-  delete_ssu_helices
-  delete_lsu_helices
+    """
+    delete_all_helices
+    Attempts to delete all helices to save memory
+    """
+    delete_ssu_helices
+    delete_lsu_helices
 ## End of delete_all_helices
 
 
 def delete_all_rna():
-  delete_ssu_rna
-  delete_lsu_rna
-  delete_mrna
-  delete_trna
+    """
+    delete_all_rna
+    Attempts to delete all the RNA molecules to save memory
+    """
+    delete_ssu_rna
+    delete_lsu_rna
+    delete_mrna
+    delete_trna
 ## End of delete_all_rna
 
 
 def delete_all_protein():
-  delete_lsu_protein
-  delete_ssu_protein
+    """
+    delete_all_protein
+    Attempts to delete all the proteins to save memory
+    """
+    delete_lsu_protein
+    delete_ssu_protein
 ## End of delete_all_protein
 
 
 def delete_ssu_helices():
-  for helix in helices_list:
-    helix = helix.lstrip('/')
-    if helix.find('SSU_h') > -1:
-      cmd.delete(helix)
+    """
+    delete_ssu_helices
+    Attempts to delete the small subunit helices to save memory
+    """
+    for helix in helices_list:
+        helix = helix.lstrip('/')
+        if helix.find('SSU_h') > -1:
+            cmd.delete(helix)
 ## End of delete_ssu_helices
 
 
 def delete_lsu_helices():
-  for helix in helices_list:
-    helix = helix.lstrip('/')
-    helix = str(helix)
-    if helix.find('LSU_H') > -1:
-      cmd.delete(helix)
+    """
+    delete_lsu_helices
+    Attempts to delete the large subunit helices to save memory
+    """
+    for helix in helices_list:
+        helix = helix.lstrip('/')
+        helix = str(helix)
+        if helix.find('LSU_H') > -1:
+            cmd.delete(helix)
 ## End of delete_lsu_helices
 
 
 def delete_ssu_protein():
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    if mol.find('S_S') > -1:
-      cmd.delete(mol)
-    elif re.compile('^S').search(mol) is not None:
-      cmd.delete(mol)
+    """
+    delete_ssu_protein
+    Attempts to delete the small subunit proteins to save memory
+    """
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        for ssu in small_subunit_prot:
+            ssu_name = ssu + '_S'
+            if mol.find(ssu_name) > -1:
+                cmd.delete(mol)
 ## End of delete_ssu_protein
 
 
 def delete_lsu_protein():
+    """
+    delete_lsu_protein
+    Attempts to delete large subunit proteins to save memory
+    """
   for mol in molecule_list:
     mol = mol.lstrip('/')
-    if mol.find('S_L') > -1:
-      cmd.delete(mol)
-    elif re.compile('^L').search(mol) is not None:
-      cmd.delete(mol)
+    for lsu in large_subunit_prot:
+        lsu_mol = lsu + '_L'
+        if mol.find(lsu_mol) > -1:
+            cmd.delete(mol)
 ## End of delete_lsu_protein
 
 
 def delete_ssu_rna():
+    """
+    delete_ssu_rna
+    Attempts to delete small subunit rna to save memory
+    """
   for mol in molecule_list:
     mol = mol.lstrip('/')
-    if mol.find('16S_RRNA') > -1:
-      cmd.delete(mol)
+    for ssu in small_subunit_rnas:
+        ssu_mol = ssu + '_RRNA'
+        if mol.find(ssu_mol) > -1:
+            cmd.delete(mol)
 ## End of delete_ssu_rna
 
 
 def delete_lsu_rna():
+    """
+    delete_lsu_rna
+    Attempts to delete the large subunit rna to save memory
+    """
   for mol in molecule_list:
     mol = mol.lstrip('/')
-    if mol.find('23S_RRNA') > -1:
-      cmd.delete(mol)
-    elif mol.find('5S_RR') > -1:
-      cmd.delete(mol)
-    elif mol.find('5.8S') > -1:
-      cmd.delete(mol)
+    for lsu in large_subunit_rnas:
+        lsu_mol = lsu + '_RRNA'
+        if mol.find(lsu_mol) > -1:
+            cmd.delete(mol)
 ## End of delete_lsu_rna
 
 
 def delete_trna():
+    """
+    delete_trna
+    Attempts to delete any tRNAs to save memory
+    """
   for mol in molecule_list:
     mol = mol.lstrip('/')
     if mol.find('TRNA') > -1:
@@ -264,6 +310,10 @@ def delete_trna():
 
 
 def delete_mrna():
+    """
+    delete_mrna
+    Attempts to delete any mRNA molecules to save memory
+    """
   for mol in molecule_list:
     mol = mol.lstrip('/')
     if mol.find('MRNA') > -1:
@@ -452,7 +502,7 @@ def make_chains(chains, showastype, showascolor):
   elif chains.find('escherichia_coli') > -1:
     chains_filenames = [datadir + 'escherichia_coli.txt',]
   elif chains.find('thermomyces_lanuginosus') > -1:
-    chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+    chains_filenames = [datadir + 'thermomyces_languinosus.txt',]
   elif chains.find('thermus_thermophilus') > -1:
     chains_filenames =  [datadir + 'thermus_thermophilus.txt',]
   elif chains.find('haloarcula_marismortui') > -1:
@@ -604,6 +654,8 @@ def random_chains(pdb_file, splitp):
       mol_name = mol_name.replace('\\','')
       mol_name = mol_name.replace(' ', '_')
       color = default_colors['default']
+      ## This section needs to be generalized using
+      ## large_subunit_rnas and the similar globals
       if (mol_name.find('PROTEIN') > -1):
         if (mol_name.find('RACK') > -1):
           color = default_colors['RACK']
@@ -946,38 +998,46 @@ def switch_chains(old):
     rename_chain(old, new_name)
     rename_chain(tmp, old)
 
-def rename_on_bridge_dist():
-    b1a_distance = cmd.distance("B1A_test", "/25S_RRNA///1025", "/18S_RRNA///1240")
-    if (b1a_distance > 100):
-        mol_list = cmd.get_names("all")
-        for mol in mol_list:
-            if re.compile('_$').search(mol) is None:
-                if mol.find('40S_S') > -1:
-                    switch_chains(mol)
-                elif mol.find('18S_RRNA') > -1:
-                    switch_chains(mol)
+def rename_on_bridge_dist(lsu_nucleotide = "/25S_RRNA///1024" , ssu_nucleotide = "/18S_RRNA///1240" , switch_prot = "40S_S" , switch_rna = "18S_RRNA"):
+    b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
+    ## The default values for the B1A bridge are from Yusupov's 2010 paper about the yeast ribosome
+    if (b1a_distance < 0):
+        ## These values for B1A come from Noller 2001 and Yusupov 2010
+        rename_on_bridge_dist("/23S_RRNA///886", "/30S_S13///93", "30S_S", "16S_RRNA")
+    else:
+        
+        if (b1a_distance > 100):
+            mol_list = cmd.get_names("all")
+            for mol in mol_list:
+                if re.compile('_$').search(mol) is None:
+                    if mol.find(switch_prot) > -1:
+                        switch_chains(mol)
+                    elif mol.find(switch_rna) > -1:
+                        switch_chains(mol)
 
-        for mol in mol_list:
-            if re.compile('UNASSIGNED').search(mol):
-                print "Skipping unassigned"
-            elif re.compile('_$').search(mol):
-                name_two = mol + "2"
-                rename_chain(mol, name_two)
+            for mol in mol_list:
+                if re.compile('UNASSIGNED').search(mol):
+                    print "Skipping unassigned"
+                elif re.compile('_$').search(mol):
+                    name_two = mol + "2"
+                    rename_chain(mol, name_two)
 
-def search_interactions_helices(distance = 3):
+def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisiae"):
     lsu_protein_list = []
     ssu_protein_list = []
     rna_list = []
     molecule_list = cmd.get_names("all")
     for mol in molecule_list:
-        if mol.find('60S_L') > -1:
-            print "Found " + mol
-            lsu_protein_list.append(mol)
-        elif mol.find('40S_S') > -1:
-            print "Found " + mol
-            ssu_protein_list.append(mol)
+        for lsu_prot in large_subunit_prot:
+            if mol.find(lsu_prot) > -1:
+                print "Found " + mol
+                lsu_protein_list.append(mol)
+        for ssu_prot in small_subunit_prot:
+            if mol.find(ssu_prot) > -1:
+                print "Found " + mol
+                ssu_protein_list.append(mol)
 
-    helices_filename = datadir + 'saccharomyces_helices.txt'
+    helices_filename = datadir + species + ".txt"
     chains_lines = file(helices_filename).readlines()
     for ch in chains_lines:
         if re.compile('^#').search(ch) is not None:
@@ -1006,14 +1066,13 @@ def search_interactions(distance = 3):
   molecule_list = cmd.get_names("all")
   for mol in molecule_list:
     if mol.find('RRNA') > -1:
-      print "Found " + mol
       rna_list.append(mol)
-    elif mol.find('60S_L') > -1:
-      print "Found " + mol
-      lsu_protein_list.append(mol)
-    elif mol.find('40S_S') > -1:
-      print "Found " + mol
-      ssu_protein_list.append(mol)
+  for lsu_mol in large_subunit_prot:
+      if mol.find(lsu_mol) > -1:
+          lsu_protein_list.append(mol)
+  for ssu_mol in small_subunit_prot:
+      if mol.find(ssu_mol) > -1:
+          ssu_protein_list.append(mol)
 
   for prot in lsu_protein_list:
       for rna in rna_list:
