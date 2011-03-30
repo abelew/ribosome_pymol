@@ -3,11 +3,17 @@ import tkSimpleDialog
 import tkMessageBox
 import tkColorChooser
 import tkFileDialog
-import sys, string, re, os, csv
+import sys
+import string
+import re
+import os
+import csv
 import urllib
 import gzip
 import subprocess
 import platform
+import string
+
 from pymol import stored, cmd, selector
 pymol_data_path = os.getenv("PYMOL_DATA")
 helices_path = pymol_data_path + "/pmg_tk"
@@ -322,12 +328,20 @@ def delete_mrna():
 
 
 def delete_original():
+    """
+    delete_original
+    Delete the original pdb entries to save memory
+    """
   for original_molecule in original_list:
     cmd.delete(original_molecule)
 ## End of delete_original
 
 
 def delete_lsuh():
+    """
+    delete_lsuh
+    Delete the helices of the large subunit
+    """
   counter = 0
   while (counter <= 104):
       counter = counter + 1
@@ -337,6 +351,10 @@ def delete_lsuh():
 
 
 def delete_ssuh():
+    """
+    delete_ssuh
+    Delete the helices of the small subunit
+    """
     counter = 0
     while (counter <= 45):
         counter = counter + 1
@@ -347,19 +365,27 @@ def delete_ssuh():
 ## I changed like 2 lines from remote_load_pdb.py
 ## The main change is at the end of fetch()
 class fetch_then_chains:
-  def __init__(self, app):
-    import tkSimpleDialog
-    import tkMessageBox
-    pdbCode = tkSimpleDialog.askstring('PDB Loader Service',
-                                       'Please enter a 4-digit pdb code:',
-                                       parent=app.root)
-    if pdbCode: # None is returned for user cancel
-      pdbCode = string.upper(pdbCode)
-      fetch(pdbCode,"")
+    """
+    fetch_then_chains
+    Take in a PDB accession, download the file, parse its header
+    and display the pieces.
+    """
+    def __init__(self, app):
+        pdbCode = tkSimpleDialog.askstring('PDB Loader Service',
+                                           'Please enter a 4-digit pdb code:',
+                                           parent=app.root)
+        if pdbCode: # None is returned for user cancel
+            pdbCode = string.upper(pdbCode)
+            fetch(pdbCode,"")
 ## End of fetch_then_chains
 
 
 def check_fetch(information):
+    """
+    check_fetch
+    Print some information about a ribosomal pdb before fetching it.
+    This information lies in helices_data/structures.csv
+    """
   mymessage = "The pdb " + information[3] + ", species: " + str(information[0]) + " came from the " + str(information[1]) + " lab in " + str(information[2]) + " described by:\n" + str(information[4]) + "\nClick 'yes' if you wish to view this pdb file."
   response = tkMessageBox.askyesno(title=information[3],message=mymessage)
   if response:
@@ -368,11 +394,11 @@ def check_fetch(information):
 
 
 def fetch(pdb, splitp):
-  import urllib
-  import gzip
-  import os
-  import string
-  import tkMessageBox
+    """
+    fetch
+    As per load_pdb, the only difference is that it calls to the following
+    function, random_chains
+    """
   try:
     filename = urllib.urlretrieve('http://www.rcsb.org/pdb/files/' + pdb + '.pdb.gz')[0]
   except:
@@ -396,12 +422,16 @@ def fetch(pdb, splitp):
 ## End of fetch
 
 
-
 ## chain_color will color arbitrary bases/residues with the colors
 ## specified in data/color_definitions.txt
 ## The residues chosen should be in a text file as per
 ## data/modifications.txt
 def chain_color(bases):
+    """
+    chain_color
+    read over helices_data/color_definitions.txt to get an idea
+    of likely colors for chains and residues.
+    """
   ## The next 8 lines attempts to figure out what file
   ## to use to define the residues to color
   input_file = ""
@@ -476,6 +506,12 @@ def make_pretty():
 ## This function is the toplevel function to make pretty helices
 ## Change the default_colors['helix'] to whatever color you prefer.
 def helices(new_organism = "saccharomyces_cerevisiae"):
+    """
+    helices
+    read a file in helices_data/ which corresponds to the species
+    of this ribosome.  These contain definitions for every ribosomal
+    helix.  Create individual pymol objects for every helix.
+    """
     if organism is None:
         make_chains(new_organism, 'sticks', default_colors['helix'])
     else:
@@ -486,7 +522,73 @@ def helices(new_organism = "saccharomyces_cerevisiae"):
 ## This should ask for the relevant data file and call the
 ## cheater perl scripts I wrote
 def twod_helices():
-  subprocess.Popen([r"2d/make_color_ps.pl"]).wait()
+    print "Provide the text file you wish to use to color, the filename"
+    print "Should be one of: 18S_rRNA.txt, 25S_rRNA_3p.txt, 25S_rRNA_5p.txt"
+    print "Otherwise this is not smart enough to understand what you want."
+    tk_root = Tkinter.Tk()
+    twod_textfile = tkFileDialog.askopenfile(parent=tk_root,mode='rb',title='Choose a file')
+    new_twod = twod_filename
+    new_twod = re.sub('txt$', 'ps', str(twod_textfile))
+    old_twod = os.path.basename(new_twod)
+    old_twod = datadir + str(old_twod)
+    file_new_twod = open(new_twod, 'w')
+    file_old_twod = open(old_twod, 'r')
+    file_twod_tex = open(twod_textfile, 'r')
+    
+    ## First get the numbers from the text file.
+    if file(file_twod_text) is not None:
+        twod_text_lines = file(file_twod_text).readlines()
+        color_list = []
+        for li in twod_text_lines:
+            (num, col) = li.split()
+            color_list.append(col)
+        file.close(file_twod_text)
+
+    if file(file_old_twod) is not None:
+        test_string = ""
+        if str(file_old_twod) == '18S_rRNA.ps':
+            test_string = "290.00 -105.33 290.00 -98.67 lwline"
+        elif str(fold_old_twod) == '25S_rRNA_3p.ps':
+            test_string = "-148.33 -1010.00 -141.67 -1010.00 lwline"
+        elif str(fold_old_twod) == '25S_rRNA_5p.ps':
+            test_string = "360.00 0.00 1.00 1.00 1.00 431.01 154.00 lwfarc"
+        count = None
+        list_count = 0
+        for li in file_old_twod:
+            file_new_twod.write(li)
+            if li == test_string:
+                count = 0
+            elif count == 0:
+                count = count + 1
+            elif count == 1:
+                count = count - 1
+                chosen_color = color_list[list_count]  ## A number from the input file
+                if (chosen_color == 0):  ## black
+                    file_new_twod.write("0 0 0 setrgbcolor\n")
+                elif (chosen_color == 10):  ## gray
+                    file_new_twod.write("0.6 0.6 0.6 setrgbcolor\n")
+                elif (chosen_color == 11):   ## neon pink
+                    file_new_twod.write("0.85 0.30 0.64 setrgbcolor\n")
+                elif (chosen_color == -4):  ## purple
+                    file_new_twod.write("0.36 0.18 0.64 setrgbcolor\n")
+                elif (chosen_color == -3):  ## blue
+                    file_new_twod.write("0.08 0.25 1.0 setrgbcolor\n")
+                elif (chosen_color == -2):  ## greenblue
+                    file_new_twod.write("0.25 0.90 0.92 setrgbcolor\n")
+                elif (chosen_color == -1):  ## green
+                    file_new_twod.write("0.1 0.90 0.1 setrgbcolor\n")
+                elif (chosen_color == 1):  ## yellow
+                    file_new_twod.write("0.9 0.9 0.15 setrgbcolor\n")
+                elif (chosen_color == 2):  ## yelloworange
+                    file_new_twod.write("0.90 0.60 0.10 setrgbcolor\n")
+                elif (chosen_color == 3):  ## orangered
+                    file_new_twod.write("0.92 0.34 0.08 setrgbcolor\n")
+                elif (chosen_color == 4):  ## red
+                    file_new_twod.write("0.92 0.10 0.10 setrgbcolor\n")
+                else:
+                    file_new_twod.write("0.57 0.08 0.32 setrgbcolor\n")
+    file.close(file_old_twod)
+    file.close(file_new_twod)
 ## End of twod_helices
   
 
@@ -494,28 +596,31 @@ def make_chains(chains, showastype, showascolor):
   ## Start out figuring out the data file to specify the helices
   ## Currently I just have a stupid if/elif chain for the few species
   ## I have annotated.
-  if chains == 'wtf':
-    print "WTF"
-    chains_filenames = [datadir + 'wtf.txt',]
-  elif chains == 'ssh':
-    chains_filenames = [datadir + 'helices_ssu.txt',]
-  elif chains.find('escherichia_coli') > -1:
-    chains_filenames = [datadir + 'escherichia_coli.txt',]
-  elif chains.find('thermomyces_lanuginosus') > -1:
-    chains_filenames = [datadir + 'thermomyces_languinosus.txt',]
-  elif chains.find('thermus_thermophilus') > -1:
-    chains_filenames =  [datadir + 'thermus_thermophilus.txt',]
-  elif chains.find('haloarcula_marismortui') > -1:
-    chains_filenames = [datadir + 'haloarcula_marismortui.txt',]
-  elif chains.find('saccharomyces') > -1:
-    chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-  elif chains.find('saccharomyces_cerevisiae') > -1:
-    chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-  elif chains.find('saccharomyces_cerevisiae_s288c') > -1:
-    chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-  else:
-    print "Could not understand the argument:" + chains +", using the wtf file"
-    chains_filenames = [datadir + 'wtf.txt',]
+    test_chains = datadir + chains + '.txt'
+    if file(test_chains) is not None:
+        chains_filenames = [ test_chains , ]
+    else:    
+        if chains == 'wtf':
+            print "WTF"
+            chains_filenames = [datadir + 'wtf.txt',]
+        elif chains.find('escherichia_coli') > -1:
+            chains_filenames = [datadir + 'escherichia_coli.txt',]
+        elif chains.find('thermomyces_lanuginosus') > -1:
+            chains_filenames = [datadir + 'thermomyces_languinosus.txt',]
+        elif chains.find('thermus_thermophilus') > -1:
+            chains_filenames =  [datadir + 'thermus_thermophilus.txt',]
+        elif chains.find('haloarcula_marismortui') > -1:
+            chains_filenames = [datadir + 'haloarcula_marismortui.txt',]
+        elif chains.find('saccharomyces') > -1:
+            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+        elif chains.find('saccharomyces_cerevisiae') > -1:
+            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+        elif chains.find('saccharomyces_cerevisiae_s288c') > -1:
+            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+        else:
+            print "Could not understand the argument:" + chains +", using the wtf file"
+            chains_filenames = [datadir + 'wtf.txt',]
+
   ## Once the species has been decided, open the appropriate file and start
   for chains_filename in chains_filenames:
     if chains_filename:
@@ -957,7 +1062,7 @@ def color_by_amino_acid(selection):
         }
     for aa in residue_abbrev:
         amino_acid = residue_abbrev[aa]
-        sel = selection + " and resn %s" % amino_acid
+        sel = selecton + " and resn %s" % amino_acid
         chosen_color = type_colors[abbrev_to_type[aa]]
         cmd.select("temp", sel)
         cmd.color(chosen_color, "temp")
