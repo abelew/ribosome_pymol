@@ -13,15 +13,15 @@ import gzip
 import subprocess
 import platform
 import string
-
 from pymol import stored, cmd, selector
+
+stored.organism = "saccharomyces_cerevisiae"
+
 helices_path = os.environ["HELICES_HOME"]
 if (helices_path is None):
     helices_path = os.getenv("PYMOL_DATA") + "../helices"
 sys.path.append(helices_path)
 datadir=helices_path + "/helices_data/"
-global organism
-organism = "saccharomyces_cerevisiae"
 global molecule_list
 molecule_list = []
 global original_list
@@ -513,14 +513,14 @@ def make_pretty():
 
 ## This function is the toplevel function to make pretty helices
 ## Change the default_colors['helix'] to whatever color you prefer.
-def helices(new_organism = organism):
+def helices(new_organism = stored.organism):
     """
     helices
     read a file in helices_data/ which corresponds to the species
     of this ribosome.  These contain definitions for every ribosomal
     helix.  Create individual pymol objects for every helix.
     """
-    make_chains(organism, 'sticks', default_colors['helix'])
+    make_chains(stored.organism, 'sticks', default_colors['helix'])
 ## End of helices
 
 
@@ -741,13 +741,13 @@ def random_chains(pdb_file, splitp):
                 num = line_array[1]
                 chain_mol = line_array[2]
                 if (chain_mol == 'ORGANISM_SCIENTIFIC:'):
-                    (pre, organism) = pdb_line.split(": ")
-                    org = str(organism)
+                    (pre, org) = pdb_line.split(": ")
+                    org = str(org)
                     org = org.rstrip()
                     org = org.rstrip(';')
                     org = org.lower()
                     org = org.replace(' ', '_')
-                    organism = "%s" %(org)
+                    stored.organism = "%s" %(org)
                     
     ## The surviving lines should proved a means to find the
     ## name of every chain and molecule of the PDB file.
