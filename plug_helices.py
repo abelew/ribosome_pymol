@@ -15,10 +15,10 @@ import platform
 import string
 
 from pymol import stored, cmd, selector
-pymol_data_path = os.getenv("PYMOL_DATA")
-helices_path = pymol_data_path + "/pmg_tk"
+helices_path = os.environ["HELICES_HOME"]
+if (helices_path is None):
+    helices_path = os.getenv("PYMOL_DATA") + "../helices"
 sys.path.append(helices_path)
-#helices_dir = os.path.dirname(__file__)
 datadir=helices_path + "/helices_data/"
 global organism
 organism = "saccharomyces_cerevisiae"
@@ -185,6 +185,8 @@ def edit_ribosomes():
     if my_type == "Linux":
         open_command = "openoffice.org"
     elif my_type == "MacOS":
+        open_command = "open"
+    elif my_type == "Darwin":
         open_command = "open"
     elif my_type == "Windows":
         open_command = "explorer"
