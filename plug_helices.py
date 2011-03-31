@@ -17,11 +17,18 @@ from pymol import stored, cmd, selector
 
 stored.organism = "saccharomyces_cerevisiae"
 
-helices_path = os.environ["HELICES_HOME"]
-if (helices_path is None):
-    helices_path = os.getenv("PYMOL_DATA") + "../helices"
+helices_path = None
+try:
+    helices_path = os.environ["HELICES_HOME"]
+except:
+    helices_path = os.environ["PYMOL_DATA"]
 sys.path.append(helices_path)
-datadir=helices_path + "/helices_data/"
+datadir = None
+if platform.system() == "Windows":
+    datadir = "C:\\Program Files\\PyMOL\\PyMOL\\data\\helices_data\\"
+else:
+    datadir = helices_path + "/helices_data/"
+
 global molecule_list
 molecule_list = []
 global original_list
