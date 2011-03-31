@@ -20,6 +20,8 @@ helices_path = pymol_data_path + "/pmg_tk"
 sys.path.append(helices_path)
 #helices_dir = os.path.dirname(__file__)
 datadir=helices_path + "/helices_data/"
+global organism
+organism = "saccharomyces_cerevisiae"
 global molecule_list
 molecule_list = []
 global original_list
@@ -51,9 +53,9 @@ global large_subunit_rnas
 global small_subunit_prot
 global large_subunit_prot
 small_subunit_rnas = ['18S', '16S']
-large_subunit_rnas = ['25S', '23S', '5.8S', '5S']
+large_subunit_rnas = ['26S', '25S', '23S', '5.8S', '5S']
 small_subunit_prot = ['40S', '30S']
-large_subunit_prot = ['60S', '50S', 'RACK']
+large_subunit_prot = ['60S', '50S']
 
 ## The function 'fetch_then_chains' was taken with very minor changes
 ## from remote_pdb_load.py.  The copyright notice is at the bottom of
@@ -189,14 +191,18 @@ def edit_ribosomes():
     os.system(open_command + " " + ribosomes_path + " &")
 ## End of edit_ribosomes
 
+def del_enabled():
+    mols = cmd.get_names(enabled_only = 1)
+    for mol in mols:
+        cmd.delete(mol)
 
 def delete_all_helices():
     """
     delete_all_helices
     Attempts to delete all helices to save memory
     """
-    delete_ssu_helices
-    delete_lsu_helices
+    delete_ssu_helices()
+    delete_lsu_helices()
 ## End of delete_all_helices
 
 
@@ -205,10 +211,10 @@ def delete_all_rna():
     delete_all_rna
     Attempts to delete all the RNA molecules to save memory
     """
-    delete_ssu_rna
-    delete_lsu_rna
-    delete_mrna
-    delete_trna
+    delete_ssu_rna()
+    delete_lsu_rna()
+    delete_mrna()
+    delete_trna()
 ## End of delete_all_rna
 
 
@@ -217,8 +223,8 @@ def delete_all_protein():
     delete_all_protein
     Attempts to delete all the proteins to save memory
     """
-    delete_lsu_protein
-    delete_ssu_protein
+    delete_lsu_protein()
+    delete_ssu_protein()
 ## End of delete_all_protein
 
 
@@ -266,12 +272,12 @@ def delete_lsu_protein():
     delete_lsu_protein
     Attempts to delete large subunit proteins to save memory
     """
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    for lsu in large_subunit_prot:
-        lsu_mol = lsu + '_L'
-        if mol.find(lsu_mol) > -1:
-            cmd.delete(mol)
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        for lsu in large_subunit_prot:
+            lsu_mol = lsu + '_L'
+            if mol.find(lsu_mol) > -1:
+                cmd.delete(mol)
 ## End of delete_lsu_protein
 
 
@@ -280,12 +286,12 @@ def delete_ssu_rna():
     delete_ssu_rna
     Attempts to delete small subunit rna to save memory
     """
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    for ssu in small_subunit_rnas:
-        ssu_mol = ssu + '_RRNA'
-        if mol.find(ssu_mol) > -1:
-            cmd.delete(mol)
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        for ssu in small_subunit_rnas:
+            ssu_mol = ssu + '_RRNA'
+            if mol.find(ssu_mol) > -1:
+                cmd.delete(mol)
 ## End of delete_ssu_rna
 
 
@@ -294,12 +300,12 @@ def delete_lsu_rna():
     delete_lsu_rna
     Attempts to delete the large subunit rna to save memory
     """
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    for lsu in large_subunit_rnas:
-        lsu_mol = lsu + '_RRNA'
-        if mol.find(lsu_mol) > -1:
-            cmd.delete(mol)
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        for lsu in large_subunit_rnas:
+            lsu_mol = lsu + '_RRNA'
+            if mol.find(lsu_mol) > -1:
+                cmd.delete(mol)
 ## End of delete_lsu_rna
 
 
@@ -308,10 +314,10 @@ def delete_trna():
     delete_trna
     Attempts to delete any tRNAs to save memory
     """
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    if mol.find('TRNA') > -1:
-      cmd.delete(mol)
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        if mol.find('TRNA') > -1:
+            cmd.delete(mol)
 ## End of delete_trna
 
 
@@ -320,10 +326,10 @@ def delete_mrna():
     delete_mrna
     Attempts to delete any mRNA molecules to save memory
     """
-  for mol in molecule_list:
-    mol = mol.lstrip('/')
-    if mol.find('MRNA') > -1:
-      cmd.delete(mol)
+    for mol in molecule_list:
+        mol = mol.lstrip('/')
+        if mol.find('MRNA') > -1:
+            cmd.delete(mol)
 ## End of delete_mrna
 
 
@@ -332,8 +338,8 @@ def delete_original():
     delete_original
     Delete the original pdb entries to save memory
     """
-  for original_molecule in original_list:
-    cmd.delete(original_molecule)
+    for original_molecule in original_list:
+        cmd.delete(original_molecule)
 ## End of delete_original
 
 
@@ -342,11 +348,11 @@ def delete_lsuh():
     delete_lsuh
     Delete the helices of the large subunit
     """
-  counter = 0
-  while (counter <= 104):
-      counter = counter + 1
-      string = "LSU_H", counter
-      cmd.delete(string)
+    counter = 0
+    while (counter <= 104):
+        counter = counter + 1
+        string = "LSU_H", counter
+        cmd.delete(string)
 ## End of delete_lsuh
 
 
@@ -386,10 +392,10 @@ def check_fetch(information):
     Print some information about a ribosomal pdb before fetching it.
     This information lies in helices_data/structures.csv
     """
-  mymessage = "The pdb " + information[3] + ", species: " + str(information[0]) + " came from the " + str(information[1]) + " lab in " + str(information[2]) + " described by:\n" + str(information[4]) + "\nClick 'yes' if you wish to view this pdb file."
-  response = tkMessageBox.askyesno(title=information[3],message=mymessage)
-  if response:
-    fetch(information[3],"")
+    mymessage = "The pdb " + information[3] + ", species: " + str(information[0]) + " came from the " + str(information[1]) + " lab in " + str(information[2]) + " described by:\n" + str(information[4]) + "\nClick 'yes' if you wish to view this pdb file."
+    response = tkMessageBox.askyesno(title=information[3],message=mymessage)
+    if response:
+        fetch(information[3],"")
 ## End of check_fetch
 
 
@@ -399,26 +405,26 @@ def fetch(pdb, splitp):
     As per load_pdb, the only difference is that it calls to the following
     function, random_chains
     """
-  try:
-    filename = urllib.urlretrieve('http://www.rcsb.org/pdb/files/' + pdb + '.pdb.gz')[0]
-  except:
-    tkMessageBox.showerror('Connection Error',
-                           'Can not access to the PDB database.\n'+
-                           'Please check your Internet access.',)
-  else:
-    if (os.path.getsize(filename) > 0): # If 0, then pdb code was invalid
-      fpin = gzip.open(filename)
-      outputname = os.path.dirname(filename) + os.sep + pdb + '.pdb'
-      fpout = open(outputname, 'w')
-      fpout.write(fpin.read()) # Write pdb file
-      fpin.close()
-      fpout.close()
-      cmd.load(outputname,quiet=0) # Load the fresh pdb
-      ## This is the change from Trey, a callout to random_chains()
-      random_chains(outputname,splitp)
+    try:
+        filename = urllib.urlretrieve('http://www.rcsb.org/pdb/files/' + pdb + '.pdb.gz')[0]
+    except:
+        tkMessageBox.showerror('Connection Error',
+                               'Can not access to the PDB database.\n'+
+                               'Please check your Internet access.',)
     else:
-      tkMessageBox.showerror('Invalid Code', 'You entered an invalid pdb code:' + pdb,)
-      os.remove(filename) # Remove tmp file (leave the pdb)
+        if (os.path.getsize(filename) > 0): # If 0, then pdb code was invalid
+            fpin = gzip.open(filename)
+            outputname = os.path.dirname(filename) + os.sep + pdb + '.pdb'
+            fpout = open(outputname, 'w')
+            fpout.write(fpin.read()) # Write pdb file
+            fpin.close()
+            fpout.close()
+            cmd.load(outputname,quiet=0) # Load the fresh pdb
+      ## This is the change from Trey, a callout to random_chains()
+            random_chains(outputname,splitp)
+        else:
+            tkMessageBox.showerror('Invalid Code', 'You entered an invalid pdb code:' + pdb,)
+            os.remove(filename) # Remove tmp file (leave the pdb)
 ## End of fetch
 
 
@@ -434,64 +440,64 @@ def chain_color(bases):
     """
   ## The next 8 lines attempts to figure out what file
   ## to use to define the residues to color
-  input_file = ""
-  if bases == "modified":
-    input_file = datadir + 'modifications.txt'
-  else:
-    tmp_filename = tkFileDialog.askopenfile(title="Open a session")
+    input_file = ""
+    if bases == "modified":
+        input_file = datadir + 'modifications.txt'
+    else:
+        tmp_filename = tkFileDialog.askopenfile(title="Open a session")
     if not tmp_filename: return
     input_file = tmp_filename.name
-  comment = ''
+    comment = ''
 
   ## From here until 'if input_file:' the color definitions
   ## are specified
-  colors_file = datadir + 'color_definitions.txt'
-  colors = dict({None : 'gray',})
-  if colors_file:
-    color_lines = file(colors_file).readlines()
-  for color_line in color_lines:
-    color_datum = color_line.split()
+    colors_file = datadir + 'color_definitions.txt'
+    colors = dict({None : 'gray',})
+    if colors_file:
+        color_lines = file(colors_file).readlines()
+        for color_line in color_lines:
+            color_datum = color_line.split()
     colors[color_datum[0]] = color_datum[1]
 
   ## Now read the input file and select the appropriate residues
   ## and color them according to the rules in the colors dictionary
-  if input_file:
-    lines = file(input_file).readlines()
-  else:
-    lines = sys.stdin.readlines()
-  subunit = ''
-  chain = ''
-  for line in lines:
-    chain = ""
-    if re.compile('^#').search(line) is not None: # skip commented lines
-      tmpre = re.compile('^#')
-      tmpre = tmpre.sub('', line)
-      try:
-        (subunit, chain) = tmpre.split()
-      except:
-        subunit = tmpre.strip()
+    if input_file:
+        lines = file(input_file).readlines()
     else:
-      datum = line.split()
-      try:
-        num = datum[0].strip()
-        if chain == "":
-          selection_string = '/' + subunit + '///' + num
-          selection_name = subunit + '_' + num
-        else:
-          selection_string = '/' + subunit + '//' + chain + '/' + num
-          selection_name = subunit + '_' + chain + '_' + num
-        color_choice = datum[1].strip()
-        color_name = ''
+        lines = sys.stdin.readlines()
+        subunit = ''
+        chain = ''
+        for line in lines:
+            chain = ""
+    if re.compile('^#').search(line) is not None: # skip commented lines
+        tmpre = re.compile('^#')
+        tmpre = tmpre.sub('', line)
         try:
-          color_name = colors[color_choice]
+            (subunit, chain) = tmpre.split()
         except:
-          color_name = color_choice
+            subunit = tmpre.strip()
+    else:
+        datum = line.split()
         try:
-          cmd.color(color_name, selection_string)
+            num = datum[0].strip()
+            if chain == "":
+                selection_string = '/' + subunit + '///' + num
+                selection_name = subunit + '_' + num
+            else:
+                selection_string = '/' + subunit + '//' + chain + '/' + num
+                selection_name = subunit + '_' + chain + '_' + num
+            color_choice = datum[1].strip()
+            color_name = ''
+            try:
+                color_name = colors[color_choice]
+            except:
+                color_name = color_choice
+            try:
+                cmd.color(color_name, selection_string)
+            except:
+                cmd.color(colors[None], selection_string)
         except:
-          cmd.color(colors[None], selection_string)
-      except:
-        print "Cannot find your selection, perhaps you must split the chains first"
+            print "Cannot find your selection, perhaps you must split the chains first"
 ## End of chain_color
 
 
@@ -505,28 +511,32 @@ def make_pretty():
 
 ## This function is the toplevel function to make pretty helices
 ## Change the default_colors['helix'] to whatever color you prefer.
-def helices(new_organism = "saccharomyces_cerevisiae"):
+def helices(new_organism = organism):
     """
     helices
     read a file in helices_data/ which corresponds to the species
     of this ribosome.  These contain definitions for every ribosomal
     helix.  Create individual pymol objects for every helix.
     """
-    if organism is None:
-        make_chains(new_organism, 'sticks', default_colors['helix'])
-    else:
-        make_chains(organism, 'sticks', default_colors['helix'])
+    make_chains(organism, 'sticks', default_colors['helix'])
 ## End of helices
 
 
 ## This should ask for the relevant data file and call the
 ## cheater perl scripts I wrote
 def twod_helices():
+    """
+    twod_helices
+    Ask the user for an input file named either:
+    18S_rRNA.txt, 25S_rRNA_3p.txt, or 25S_rRNA_5p.txt
+    These files should contain base numbers followed by
+    an integer 'color.'  This will then color a 2d representation
+    of the Saccharomyces cerevisiae ribosome with these colors.
+    """
     print "Provide the text file you wish to use to color, the filename"
     print "Should be one of: 18S_rRNA.txt, 25S_rRNA_3p.txt, 25S_rRNA_5p.txt"
     print "Otherwise this is not smart enough to understand what you want."
-    tk_root = Tkinter.Tk()
-    twod_textfile = tkFileDialog.askopenfile(parent=tk_root,mode='rb',title='Choose a file')
+    twod_textfile = tkFileDialog.askopenfile(parent=app.root,mode='rb',title='Choose a file')
     new_twod = twod_filename
     new_twod = re.sub('txt$', 'ps', str(twod_textfile))
     old_twod = os.path.basename(new_twod)
@@ -593,6 +603,14 @@ def twod_helices():
   
 
 def make_chains(chains, showastype, showascolor):
+    """
+    make_chains
+    Running make_chains should have pymol read a file in helices_data
+    which contains specifications of every ribosomal helix and some
+    special features (the PTC for instance)
+    Pymol will use this information to create objects corresponding to
+    every object.
+    """
   ## Start out figuring out the data file to specify the helices
   ## Currently I just have a stupid if/elif chain for the few species
   ## I have annotated.
@@ -622,28 +640,28 @@ def make_chains(chains, showastype, showascolor):
             chains_filenames = [datadir + 'wtf.txt',]
 
   ## Once the species has been decided, open the appropriate file and start
-  for chains_filename in chains_filenames:
-    if chains_filename:
-      chains_lines = file(chains_filename).readlines()
-      for ch in chains_lines:
-        if re.compile('^#').search(ch) is not None:
-          continue
-        name = ''
-        location = ''
+    for chains_filename in chains_filenames:
+        if chains_filename:
+            chains_lines = file(chains_filename).readlines()
+            for ch in chains_lines:
+                if re.compile('^#').search(ch) is not None:
+                    continue
+                name = ''
+                location = ''
         ## Each line of the file is a name, pymol_specification
         ## so just split by comma and run with it
-        (name, location) = ch.split(',')
-        try:
-          cmd.create(name, location)
-          cmd.disable(name)
-          new_selection = "/" + name
-          if showastype:
-            helices_list.append(new_selection)
-            cmd.show(showastype, new_selection)
-            if showascolor:
-              cmd.color(showascolor, new_selection)
-        except:
-          print "There was an error."
+                (name, location) = ch.split(',')
+                try:
+                    cmd.create(name, location)
+                    cmd.disable(name)
+                    new_selection = "/" + name
+                    if showastype:
+                        helices_list.append(new_selection)
+                        cmd.show(showastype, new_selection)
+                        if showascolor:
+                            cmd.color(showascolor, new_selection)
+                except:
+                    print "There was an error."
     ## Zoom to something sane
     cmd.zoom("all")
 ## End of make_chains
@@ -660,158 +678,171 @@ def load_session(filename):
 ## the individual pieces by reading the header and attempting
 ## to choose sane names from the information there.
 def random_chains(pdb_file, splitp):
-  cmd.bg_color("white")
-  import re
-  if pdb_file is None:
-    pdb_file = tkFileDialog.askopenfile(title="Open a session")
-  if not pdb_file: return
+    """
+    random_chains
+    Using random_chains will parse the pdb file's
+    header in order to discover a few things:
+    a)  Is there more than 1 pdb file in this complete image?
+    b)  What species is this from?
+    c)  What are the proteins, RNAs, and ligands in this image?
+    With this information it will attempt to create individual
+    objects for every chain in the pdb file which have helpful
+    colors and names.
+    """
+    if pdb_file is None:
+        pdb_file = tkFileDialog.askopenfile(title="Open a session")
+    if not pdb_file: return
   ## pdb_filename is the full filename
   ## pdb_shortname is the 2WGD or whathaveyou
   ## pdb_basename is the path it lives in
   ## pdb_file is the file object which has all the attributes etc
-  pdb_filename = str(pdb_file)
-  pdb_basename = os.path.basename(pdb_filename)
-  pdb_shortname = os.path.splitext(pdb_basename)
-  pdb_shortname = pdb_shortname[0] 
-  original_list.append(pdb_shortname)
-  cmd.load(pdb_filename)
-  pdb_lines = file(pdb_filename).readlines()
-  chain = ''
-  source_count = 0
-  global organism
-  organism = str('saccharomyces_cerevisiae')
+    pdb_filename = str(pdb_file)
+    pdb_basename = os.path.basename(pdb_filename)
+    pdb_shortname = os.path.splitext(pdb_basename)
+    pdb_shortname = pdb_shortname[0] 
+    original_list.append(pdb_shortname)
+    cmd.load(pdb_filename)
+    pdb_lines = file(pdb_filename).readlines()
+    chain = ''
+    source_count = 0
   ## The following lines are attempting to properly decide
   ## when to stop reading a PDB file
-  for pdb_line in pdb_lines:
-    if re.compile("^HEADER").search(pdb_line) is not None:
-      continue
-    if re.compile("^TITLE").search(pdb_line) is not None:
-      continue
+    for pdb_line in pdb_lines:
+        if re.compile("^HEADER").search(pdb_line) is not None:
+            continue
+        if re.compile("^TITLE").search(pdb_line) is not None:
+            continue
     ## If a PDB file has a SPLIT entry, then it is part of
     ## a group.  So make a list of all entries in the group
     ## and fetch/split them all.
     ## Go recursion!
-    if re.compile("^SPLIT").search(pdb_line) is not None:
-      if splitp == "":
-        chains_list = pdb_line.split()
-        chains_list.pop(0)
-        for pdb_id in chains_list:
-          if (pdb_id != pdb_shortname):
-            fetch(pdb_id,"1")
-      else:
-        continue
-    if re.compile("^CAVEAT").search(pdb_line) is not None:
-      continue
+        if re.compile("^SPLIT").search(pdb_line) is not None:
+            if splitp == "":
+                chains_list = pdb_line.split()
+                chains_list.pop(0)
+                for pdb_id in chains_list:
+                    if (pdb_id != pdb_shortname):
+                        fetch(pdb_id,"1")
+            else:
+                continue
+        if re.compile("^CAVEAT").search(pdb_line) is not None:
+            continue
     ## The SOURCE stanza contains the species and so will be useful
     ## for figuring out the helices later if need be.
-    if re.compile("^SOURCE").search(pdb_line) is not None:
-      source_count = source_count + 1
-      if (source_count > 3):
-        break
-      else:
-        line_array = pdb_line.split()
-        line_type = line_array[0]
-        num = line_array[1]
-        chain_mol = line_array[2]
-        if (chain_mol == 'ORGANISM_SCIENTIFIC:'):
-          (pre, organism) = pdb_line.split(": ")
-          org = str(organism)
-          org = org.rstrip()
-          org = org.rstrip(';')
-          org = org.lower()
-          org = org.replace(' ', '_')
-          organism = "%s" %(org)
-
+        if re.compile("^SOURCE").search(pdb_line) is not None:
+            source_count = source_count + 1
+            if (source_count > 3):
+                break
+            else:
+                line_array = pdb_line.split()
+                line_type = line_array[0]
+                num = line_array[1]
+                chain_mol = line_array[2]
+                if (chain_mol == 'ORGANISM_SCIENTIFIC:'):
+                    (pre, organism) = pdb_line.split(": ")
+                    org = str(organism)
+                    org = org.rstrip()
+                    org = org.rstrip(';')
+                    org = org.lower()
+                    org = org.replace(' ', '_')
+                    organism = "%s" %(org)
+                    
     ## The surviving lines should proved a means to find the
     ## name of every chain and molecule of the PDB file.
     ## A little minor sterilizing of the molecule's name
     ## will likely be required, and then pull them apart,
     ## select them, and color them, voila.
-    line_array = pdb_line.split()
-    try:
-      line_type = line_array[0]
-    except:
-      line_type = "UNKNOWN"
-      print "problem with line_type on:" + pdb_line
-    try:
-      num = line_array[1]
-    except:
-      num = 0
-      print "problem with num on:" + pdb_line
-    try:
-      chain_mol = line_array[2]
-    except:
-      chain_mol = "UNKNOWN"
-      print "problem with chain_mol on:" + pdb_line
-    if (chain_mol == 'MOLECULE:'):
-      (pre, mol_name) = pdb_line.split(": ")
-    if (chain_mol == 'CHAIN:'):
-      (pre, chain_name) = pdb_line.split(": ")
-      mol_name = str(mol_name)
-      chain_name = str(chain_name)
-      mol_name = mol_name.rstrip()
-      mol_name = mol_name.rstrip(';')
-      mol_name = mol_name.replace(')','')
-      mol_name = mol_name.replace('(','')
-      mol_name = mol_name.replace('*','')
-      mol_name = mol_name.replace('\'','')
-      mol_name = mol_name.replace('\`','')
-      mol_name = mol_name.replace('\\','')
-      mol_name = mol_name.replace(' ', '_')
-      color = default_colors['default']
+        line_array = pdb_line.split()
+        try:
+            line_type = line_array[0]
+        except:
+            line_type = "UNKNOWN"
+            print "problem with line_type on:" + pdb_line
+        try:
+            num = line_array[1]
+        except:
+            num = 0
+            print "problem with num on:" + pdb_line
+        try:
+            chain_mol = line_array[2]
+        except:
+            chain_mol = "UNKNOWN"
+            print "problem with chain_mol on:" + pdb_line
+        if (chain_mol == 'MOLECULE:'):
+            (pre, mol_name) = pdb_line.split(": ")
+        if (chain_mol == 'CHAIN:'):
+            (pre, chain_name) = pdb_line.split(": ")
+            mol_name = str(mol_name)
+            chain_name = str(chain_name)
+            mol_name = mol_name.rstrip()
+            mol_name = mol_name.rstrip(';')
+        #      mol_name = re.sub(r')|(|*|\'|\`|\\)' , '' , mol_name)
+            mol_name = mol_name.replace(')','')
+            mol_name = mol_name.replace('(','')
+            mol_name = mol_name.replace('*','')
+            mol_name = mol_name.replace('\'','')
+            mol_name = mol_name.replace('\`','')
+            mol_name = mol_name.replace('\\','')
+            mol_name = mol_name.replace(' ', '_')
+            color = default_colors['default']
       ## This section needs to be generalized using
       ## large_subunit_rnas and the similar globals
-      if (mol_name.find('PROTEIN') > -1):
-        if (mol_name.find('RACK') > -1):
-          color = default_colors['RACK']
-        elif (mol_name.find('30S') > -1):
-          color = default_colors['SSU_protein']
-        elif (mol_name.find('50S') > -1):
-          color = default_colors['LSU_protein']
-        elif (mol_name.find('40S') > -1):
-          color = default_colors['SSU_protein']
-        elif (mol_name.find('60S') > -1):
-          color = default_colors['LSU_protein']
-        else:
-          color = default_colors['unknown']
-      elif (mol_name.find('RNA') > -1):
-        if (mol_name.find('TRNA') > -1):
-          color = default_colors['tRNA']
-        elif (mol_name.find('MRNA') > -1 or mol_name.find('MESSENGER') > -1):
-          color = default_colors['mRNA']
-        elif (mol_name.find('RRNA') > -1 or mol_name.find('S_RNA') > -1 or mol_name.find('RIBOSOMAL') > -1):
-          if (mol_name.find('16S') > -1):
-            color = default_colors['SSU_RNA']
-          elif (mol_name.find('23S') > -1):
-            color = default_colors['LSU_RNA']
-          elif (mol_name.find('5S') > -1):
-            color = default_colors['5S_RNA']
-          elif (mol_name.find('5.8S') > -1):
-            color = default_colors['5.8S_RNA']
-          else:
-            color = default_colors['RNA']
-      else:
-        color = default_colors['other']
+            if (mol_name.find('PROTEIN') > -1):
+                matched = 0
+                if (mol_name.find('RACK') > -1):
+                    color = default_colors['RACK']
+                    matched = 1
+                for ssu in small_subunit_prot:
+                    if (mol_name.find(ssu) > -1):
+                        color = default_colors['SSU_protein']
+                        matched = 1
+                for lsu in large_subunit_prot:
+                    if (mol_name.find(lsu) > -1):
+                        color = default_colors['LSU_protein']
+                        matched = 1
+                if matched == 0:
+                    color = default_colors['unknown']
+
+            elif (mol_name.find('RNA') > -1):
+                if (mol_name.find('TRNA') > -1):
+                    color = default_colors['tRNA']
+                elif (mol_name.find('MRNA') > -1 or mol_name.find('MESSENGER') > -1):
+                    color = default_colors['mRNA']
+                elif (mol_name.find('RRNA') > -1 or mol_name.find('S_RNA') > -1 or mol_name.find('RIBOSOMAL') > -1):
+                    matched = 0
+                    for lsr in large_subunit_rnas:
+                        if (mol_name.find(lsr) > -1):
+                            color = default_colors['LSU_RNA']
+                            matched = 1
+                    for ssr in small_subunit_rnas:
+                        if (mol_name.find(ssr) > -1):
+                            color = default_colors['SSU_RNA']
+                            matched = 1
+                    if matched == 0:
+                        color = default_colors['RNA']
+            else:
+                color = default_colors['other']
 
       ## Now that the various colors have been chosen, find the chains and make them
-      mol_name = mol_name.replace('RIBOSOMAL_','')
-      mol_name = mol_name.replace('S_RN', 'S_RRN')
-      mol_name = mol_name.replace('PROTEIN_','')
-      chain_name = chain_name.rstrip()
-      chain_name = chain_name.rstrip(';')
-      if (chain_name.find(',') > -1):
-        chain_array = chain_name.split(',')
-        num = 0
-        for single_chain_name in chain_array:
-          single_chain_name = single_chain_name.replace(' ','')
-          selection_string = '/' + pdb_shortname + '//' + single_chain_name
-          mol_name = mol_name + str(num)
-          define_chain(selection_string, color, mol_name)
-          num = num + 1
-      else:
-        selection_string = '/' + pdb_shortname + '//' + chain_name
-        define_chain(selection_string, color, mol_name)
-  cmd.disable(pdb_shortname)
+            mol_name = mol_name.replace('RIBOSOMAL_','')
+            mol_name = mol_name.replace('S_RN', 'S_RRN')
+            mol_name = mol_name.replace('PROTEIN_','')
+            chain_name = chain_name.rstrip()
+            chain_name = chain_name.rstrip(';')
+            if (chain_name.find(',') > -1):
+                chain_array = chain_name.split(',')
+                num = 0
+                for single_chain_name in chain_array:
+                    single_chain_name = single_chain_name.replace(' ','')
+                    selection_string = '/' + pdb_shortname + '//' + single_chain_name
+                    mol_name = mol_name + str(num)
+                    define_chain(selection_string, color, mol_name)
+                    num = num + 1
+            else:
+                selection_string = '/' + pdb_shortname + '//' + chain_name
+                define_chain(selection_string, color, mol_name)
+        cmd.disable(pdb_shortname)
+    make_pretty()
 ## End of random_chains
 
 
@@ -820,119 +851,125 @@ def random_chains(pdb_file, splitp):
 ## ribosomes and/or multiple tRNAs in the same ribosome
 ## If that happens, an '_' is just appended to the molecule name.
 ## If more are found, more '_'s are added
-def check_names(current, used_names=[]):
-  current = str(current)
-  found = 0
-  for used_mol_name in used_names:
-    if current == used_mol_name:
-      current = current + '_'
-      found = found + 1
-  if (found > 0):
-    return check_names(current)
-  else:
-    used_names.append(current)
-    return current
+## Changing this now to a number
+def check_names(current, increment = 1):
+    current = str(current)
+    found = 0
+    for used_mol_name in molecule_list:
+        if current == used_mol_name:
+            found = 1
+            if increment == 1:
+                current = current +  '_' + str(increment)
+            else:
+                current = current.rstrip(str(increment - 1))
+                current = current + str(increment)
+            increment = increment + 1
+
+    if (found > 0):
+        return check_names(current, increment)
+    else:
+        return current
 ## End of check_names
 
 
 def get_seq(selection_string):
-  from pymol import stored
-  sequence=[]
-  residues={}
-  one_letter={
-    "ALA":"A",
-    "ARG":"R",
-    "ASN":"N",
-    "ASP":"D",
-    "ASX":"B",
-    "CYS":"C",
-    "CYH":"C",#protonated cys
-    "CYX":"C",#cystein
-    "GLN":"Q",
-    "GLU":"E",
-    "GLY":"G",
-    "GLX":"Z",
-    "HIS":"H",
-    "HIP":"H",#protonated
-    "HID":"H",#h on delta
-    "HIE":"H",#h on epsilon
-    "ILE":"I",
-    "LEU":"L",
-    "LYS":"K",
-    "MET":"M",
-    "MSE":"M",#Seleno- Methionin
-    "PHE":"F",
-    "PRO":"P",
-    "SER":"S",
-    "THR":"T",
-    "TRP":"W",
-    "TYR":"Y",
-    "VAL":"V",
-    "UNK":"X",
-    "A":"A",
-    "C":"C",
-    "G":"G",
-    "T":"T",
-    "U":"U",
-    ## Below are residues which can't be added
-    "MG":"",
-    "HOH":"",
-    "OHX":"",
-    }
-  stored.residue_names=[]
-  cmd.iterate(selection_string , "stored.residue_names.append(resn)")
-  stored.residue_numbers=[]
-  cmd.iterate(selection_string , "stored.residue_numbers.append(resi)")
+    from pymol import stored
+    sequence=[]
+    residues={}
+    one_letter={
+        "ALA":"A",
+        "ARG":"R",
+        "ASN":"N",
+        "ASP":"D",
+        "ASX":"B",
+        "CYS":"C",
+        "CYH":"C",#protonated cys
+        "CYX":"C",#cystein
+        "GLN":"Q",
+        "GLU":"E",
+        "GLY":"G",
+        "GLX":"Z",
+        "HIS":"H",
+        "HIP":"H",#protonated
+        "HID":"H",#h on delta
+        "HIE":"H",#h on epsilon
+        "ILE":"I",
+        "LEU":"L",
+        "LYS":"K",
+        "MET":"M",
+        "MSE":"M",#Seleno- Methionin
+        "PHE":"F",
+        "PRO":"P",
+        "SER":"S",
+        "THR":"T",
+        "TRP":"W",
+        "TYR":"Y",
+        "VAL":"V",
+        "UNK":"X",
+        "A":"A",
+        "C":"C",
+        "G":"G",
+        "T":"T",
+        "U":"U",
+        ## Below are residues which can't be added
+        "MG":"",
+        "HOH":"",
+        "OHX":"",
+        }
+    stored.residue_names=[]
+    cmd.iterate(selection_string , "stored.residue_names.append(resn)")
+    stored.residue_numbers=[]
+    cmd.iterate(selection_string , "stored.residue_numbers.append(resi)")
 
-  for index in range(len(stored.residue_names)):
-    residues[stored.residue_numbers[index]] = stored.residue_names[index]
+    for index in range(len(stored.residue_names)):
+        residues[stored.residue_numbers[index]] = stored.residue_names[index]
 
 #  for key in sorted(residues.keys(),lambda x,y: 1 if x[1] > y[1] else -1):
 #    print "key: %s value: %s" % (key, residues[key])
 
-  result = ""
-  for k in sorted(residues.keys(), cmp=_compare_keys):
-    result += one_letter[residues[k]]
+        result = ""
+        for k in sorted(residues.keys(), cmp=_compare_keys):
+            result += one_letter[residues[k]]
 
-  print result
+            print result
 ## End of get_seq
 
 
 
 def _compare_keys(x, y):
-  try:
-    x = int(x)
-  except ValueError:
-    xint = False
-  else:
-    xint = True
-  try:
-    y = int(y)
-  except ValueError:
-    if xint:
-      return -1
-    return cmp(x.lower(), y.lower())
-    # or cmp(x, y) if you want case sensitivity.
-  else:
-    if xint:
-      return cmp(x, y)
-    return 1
+    try:
+        x = int(x)
+    except ValueError:
+        xint = False
+    else:
+        xint = True
+        try:
+            y = int(y)
+        except ValueError:
+            if xint:
+                return -1
+            return cmp(x.lower(), y.lower())
+            # or cmp(x, y) if you want case sensitivity.
+        else:
+            if xint:
+                return cmp(x, y)
+            return 1
 ## End of _compare_keys
 
 
 def define_chain(selection_string, color, mol_name):
-  if color is None:
-    color = "black"
-  mol_name = check_names(mol_name)
-  try:
-    cmd.create(mol_name, selection_string)
-    cmd.show("cartoon", mol_name)
-    cmd.color(color, mol_name)
-    cmd.disable(mol_name)
-    cmd.zoom("all")
-  except:
-    print "There was an error with:" + mol_name
-  molecule_list.append(mol_name)
+    if color is None:
+        color = "black"
+    mol_name = check_names(mol_name)
+    try:
+        cmd.create(mol_name, selection_string)
+        cmd.show("cartoon", mol_name)
+        cmd.color(color, mol_name)
+        cmd.disable(mol_name)
+        cmd.zoom("all")
+    except:
+        print "There was an error with:" + str(mol_name)
+    molecule_list.append(mol_name)
 ## End of define_chain
 
 
@@ -1095,30 +1132,35 @@ def rename_chain(old_name, new_name, tmp_name = 'tmp_'):
     cmd.create(new_name, tmp_name)
     cmd.delete(old_name)
     cmd.disable(new_name)
+    
 
-def switch_chains(old):
-    new_name = old + "_"
+def switch_chains(old, delete_second = 0):
+    new_name = old + "_1"
     tmp = new_name + "tmp"
     rename_chain(new_name, tmp)
-    rename_chain(old, new_name)
+    if str(delete_second) == "1":
+        cmd.delete(old)
+    else:
+        rename_chain(old, new_name)
     rename_chain(tmp, old)
 
-def rename_on_bridge_dist(lsu_nucleotide = "/25S_RRNA///1024" , ssu_nucleotide = "/18S_RRNA///1240" , switch_prot = "40S_S" , switch_rna = "18S_RRNA"):
+def rename_on_bridge_dist(delete_second = 0, lsu_nucleotide = "/25S_RRNA///1024" , ssu_nucleotide = "/18S_RRNA///1240" , switch_prot = "40S_S" , switch_rna = "18S_RRNA"):
     b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
+    cmd.disable("B1A_test")
     ## The default values for the B1A bridge are from Yusupov's 2010 paper about the yeast ribosome
     if (b1a_distance < 0):
         ## These values for B1A come from Noller 2001 and Yusupov 2010
-        rename_on_bridge_dist("/23S_RRNA///886", "/30S_S13///93", "30S_S", "16S_RRNA")
+        rename_on_bridge_dist(delete_second, "/23S_RRNA///886", "/30S_S13///93", "30S_S", "16S_RRNA")
     else:
         
         if (b1a_distance > 100):
             mol_list = cmd.get_names("all")
             for mol in mol_list:
-                if re.compile('_$').search(mol) is None:
+                if re.compile('_1$').search(mol) is None:
                     if mol.find(switch_prot) > -1:
-                        switch_chains(mol)
+                        switch_chains(mol, delete_second)
                     elif mol.find(switch_rna) > -1:
-                        switch_chains(mol)
+                        switch_chains(mol, delete_second)
 
             for mol in mol_list:
                 if re.compile('UNASSIGNED').search(mol):
@@ -1131,8 +1173,8 @@ def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisi
     lsu_protein_list = []
     ssu_protein_list = []
     rna_list = []
-    molecule_list = cmd.get_names("all")
-    for mol in molecule_list:
+    mol_list = cmd.get_names("all")
+    for mol in mol_list:
         for lsu_prot in large_subunit_prot:
             if mol.find(lsu_prot) > -1:
                 print "Found " + mol
@@ -1165,49 +1207,51 @@ def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisi
 
 # enabled_objs = cmd.get_names("all",enabled_only=1)
 def search_interactions(distance = 3):
-  rna_list = []
-  lsu_protein_list = []
-  ssu_protein_list = []
-  molecule_list = cmd.get_names("all")
-  for mol in molecule_list:
-    if mol.find('RRNA') > -1:
-      rna_list.append(mol)
-  for lsu_mol in large_subunit_prot:
-      if mol.find(lsu_mol) > -1:
-          lsu_protein_list.append(mol)
-  for ssu_mol in small_subunit_prot:
-      if mol.find(ssu_mol) > -1:
-          ssu_protein_list.append(mol)
+    rna_list = []
+    lsu_protein_list = []
+    ssu_protein_list = []
+    mol_list = cmd.get_names("all")
+    for mol in mol_list:
+        if mol.find('RRNA') > -1:
+            rna_list.append(mol)
+    for lsu_mol in large_subunit_prot:
+        if mol.find(lsu_mol) > -1:
+            lsu_protein_list.append(mol)
+    for ssu_mol in small_subunit_prot:
+        if mol.find(ssu_mol) > -1:
+            ssu_protein_list.append(mol)
 
-  for prot in lsu_protein_list:
-      for rna in rna_list:
-          print "Searching " + prot + " against " + rna
-          find_neighbors(prot, rna, distance)
+    for prot in lsu_protein_list:
+        for rna in rna_list:
+            print "Searching " + prot + " against " + rna
+            find_neighbors(prot, rna, distance)
   
-  for prot in ssu_protein_list:
-      for rna in rna_list:
-          print "Searching " + prot + " against " + rna
-          find_neighbors(prot, rna, distance)
+    for prot in ssu_protein_list:
+        for rna in rna_list:
+            print "Searching " + prot + " against " + rna
+            find_neighbors(prot, rna, distance)
 
-  for rna_one in rna_list:
-      for rna_two in rna_list:
-          if rna_one != rna_two:
-              find_neighbors(rna_one , rna_two)
+    for rna_one in rna_list:
+        for rna_two in rna_list:
+            if rna_one != rna_two:
+                find_neighbors(rna_one , rna_two)
 
-  for lsu_prot in lsu_protein_list:
-      for ssu_prot in ssu_protein_list:
-          find_neighbors(lsu_prot , ssu_prot)
+    for lsu_prot in lsu_protein_list:
+        for ssu_prot in ssu_protein_list:
+            find_neighbors(lsu_prot , ssu_prot)
 
-  for lsu_one in lsu_protein_list:
-      for lsu_two in lsu_protein_list:
-          if lsu_one != lsu_two:
-              find_neighbors(lsu_one , lsu_two)
+    for lsu_one in lsu_protein_list:
+        for lsu_two in lsu_protein_list:
+            if lsu_one != lsu_two:
+                find_neighbors(lsu_one , lsu_two)
 
-  for ssu_one in ssu_protein_list:
-      for ssu_two in ssu_protein_list:
-          if ssu_one != ssu_two:
-              find_neighbors(ssu_one , ssu_two)
+    for ssu_one in ssu_protein_list:
+        for ssu_two in ssu_protein_list:
+            if ssu_one != ssu_two:
+                find_neighbors(ssu_one , ssu_two)
 ## End of search_interactions
+
+cmd.extend("del_enabled", del_enabled)
 cmd.extend("switch_chains", switch_chains)
 cmd.extend("rename_chain", rename_chain)
 cmd.extend("rename_on_bridge_dist", rename_on_bridge_dist)
