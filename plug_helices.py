@@ -454,8 +454,8 @@ def chain_color(bases):
         input_file = datadir + 'modifications.txt'
     else:
         tmp_filename = tkFileDialog.askopenfile(title="Open a session")
-    if not tmp_filename: return
-    input_file = tmp_filename.name
+        if not tmp_filename: return
+        input_file = tmp_filename.name
     comment = ''
 
   ## From here until 'if input_file:' the color definitions
@@ -464,9 +464,9 @@ def chain_color(bases):
     colors = dict({None : 'gray',})
     if colors_file:
         color_lines = file(colors_file).readlines()
-        for color_line in color_lines:
-            color_datum = color_line.split()
-    colors[color_datum[0]] = color_datum[1]
+    for color_line in color_lines:
+        color_datum = color_line.split()
+        colors[color_datum[0]] = color_datum[1]
 
   ## Now read the input file and select the appropriate residues
   ## and color them according to the rules in the colors dictionary
@@ -474,39 +474,39 @@ def chain_color(bases):
         lines = file(input_file).readlines()
     else:
         lines = sys.stdin.readlines()
-        subunit = ''
-        chain = ''
-        for line in lines:
-            chain = ""
-    if re.compile('^#').search(line) is not None: # skip commented lines
-        tmpre = re.compile('^#')
-        tmpre = tmpre.sub('', line)
-        try:
-            (subunit, chain) = tmpre.split()
-        except:
-            subunit = tmpre.strip()
-    else:
-        datum = line.split()
-        try:
-            num = datum[0].strip()
-            if chain == "":
-                selection_string = '/' + subunit + '///' + num
-                selection_name = subunit + '_' + num
-            else:
-                selection_string = '/' + subunit + '//' + chain + '/' + num
-                selection_name = subunit + '_' + chain + '_' + num
-            color_choice = datum[1].strip()
-            color_name = ''
+    subunit = ''
+    chain = ''
+    for line in lines:
+        chain = ""
+        if re.compile('^#').search(line) is not None: # skip commented lines
+            tmpre = re.compile('^#')
+            tmpre = tmpre.sub('', line)
             try:
-                color_name = colors[color_choice]
+                (subunit, chain) = tmpre.split()
             except:
-                color_name = color_choice
+                subunit = tmpre.strip()
+        else:
+            datum = line.split()
             try:
-                cmd.color(color_name, selection_string)
+                num = datum[0].strip()
+                if chain == "":
+                    selection_string = '/' + subunit + '///' + num
+                    selection_name = subunit + '_' + num
+                else:
+                    selection_string = '/' + subunit + '//' + chain + '/' + num
+                    selection_name = subunit + '_' + chain + '_' + num
+                color_choice = datum[1].strip()
+                color_name = ''
+                try:
+                    color_name = colors[color_choice]
+                except:
+                    color_name = color_choice
+                try:
+                    cmd.color(color_name, selection_string)
+                except:
+                    cmd.color(colors[None], selection_string)
             except:
-                cmd.color(colors[None], selection_string)
-        except:
-            print "Cannot find your selection, perhaps you must split the chains first"
+                print "Cannot find your selection, perhaps you must split the chains first"
 ## End of chain_color
 
 
