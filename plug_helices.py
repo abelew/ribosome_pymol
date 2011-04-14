@@ -1267,10 +1267,12 @@ def movie_stitch():
     directory named 'output.avi'
     """
 
-    png_dir = tkFileDialog.asskdirectory(parent=app.root,title="Pick the directory with your movie files.")
-    mencoder_command = "cd " + png_dir + " && mencoder \"mf://*.png\" -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=wmv1:vbitrate=20000"
-    s = subprocess.Popen(mencoder_command, stdout=subprocess.PIPE).communicate()[0]
+    png_dir = tkFileDialog.askdirectory(title="Pick the directory with your movie files.")
+    mencoder_command = "cd " + png_dir + " && /usr/bin/mencoder \"mf://*.png\" -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=wmv1:vbitrate=20000"
     print "TESTME: " + mencoder_command
+#    s = subprocess.Popen(mencoder_command, stdout=subprocess.PIPE).communicate()[0]
+    s = os.system(mencoder_command)
+
 
 
 def transparent_enabled(tr = 0.7):
