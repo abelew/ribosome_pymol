@@ -1258,8 +1258,47 @@ def search_interactions(distance = 3):
         for ssu_two in ssu_protein_list:
             if ssu_one != ssu_two:
                 find_neighbors(ssu_one , ssu_two)
-## End of search_interactions
 
+def movie_stitch:
+    """
+    movie_stitch
+    Choose a directory containing your pymol movie png files
+    and mencoder will stitch them into a movie in the same
+    directory named 'output.avi'
+    """
+
+    png_dir = tkFileDialog.asskdirectory(parent=app.root,title="Pick the directory with your movie files.")
+    mencoder_command = "cd " + png_dir + " && mencoder \"mf://*.png\" -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=wmv1:vbitrate=20000"
+    s = subprocess.Popen(mencoder_command, stdout=subprocess.PIPE).communicate()[0]
+    print "TESTME: " + mencoder_command
+
+
+def transparent_enabled(tr = 0.7):
+    """
+    transparent_enabled
+    Make the currently enabled items in pymol transparent
+    If you pass this a variable, it will change the transparency
+    0 is completely opaque, 1 is completely transparent.
+    The default is 0.7
+    """
+    en = cmd.get_names(enabled_only = 1)
+    for e in en:
+        for v in ["cartoon_ring_transparency" , "cartoon_transparency" , "stick_transparency"]:
+            print "Setting " + v + " to 0.7 for " + e
+            cmd.set(v, tr, e)
+            cmd.set(v, tr, e)
+            cmd.set(v, tr, e)
+
+def crown_view:
+    """
+    Return the (currently yeast) ribosome to the crown view.
+    """
+    cmd.set_view (0.030628815 , 0.004798603 , -0.999527216 , 0.482913435 , -0.875605762 , 0.010592541 , -0.875139892 , -0.483004808 , -0.029141756 , 0.000000000 , 0.000000000 , -259.756744385 , 12.284235001 , -28.817157745 , 10.823875427 , 204.794189453 , 314.719299316 , -20.000000000)
+
+## End of search_interactions
+cmd.extend("movie_stitch", movie_stitch)
+cmd.extend("transparent_enabled", transparent_enabled)
+cmd.extend("crown_view", crown_view)
 cmd.extend("del_enabled", del_enabled)
 cmd.extend("switch_chains", switch_chains)
 cmd.extend("rename_chain", rename_chain)
