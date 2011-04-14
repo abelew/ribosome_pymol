@@ -1288,6 +1288,9 @@ def transparent_enabled(tr = 0.7):
             cmd.set(v, tr, e)
             cmd.set(v, tr, e)
             cmd.set(v, tr, e)
+    print "Consider also setting the following variables:"
+    print "cartoon_oval_width , cartoon_tube_radius , line_width"
+    print "cartoon_loop_radius , cartoon_rect_width"
 
 def crown_view:
     """
