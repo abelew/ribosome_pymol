@@ -1259,7 +1259,7 @@ def search_interactions(distance = 3):
             if ssu_one != ssu_two:
                 find_neighbors(ssu_one , ssu_two)
 
-def movie_stitch:
+def movie_stitch():
     """
     movie_stitch
     Choose a directory containing your pymol movie png files
@@ -1292,7 +1292,7 @@ def transparent_enabled(tr = 0.7):
     print "cartoon_oval_width , cartoon_tube_radius , line_width"
     print "cartoon_loop_radius , cartoon_rect_width"
 
-def crown_view:
+def crown_view():
     """
     Return the (currently yeast) ribosome to the crown view.
     """
