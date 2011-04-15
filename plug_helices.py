@@ -10,9 +10,7 @@ import os
 import csv
 import urllib
 import gzip
-import subprocess
 import platform
-import string
 from pymol import stored, cmd, selector
 
 stored.organism = "saccharomyces_cerevisiae"
@@ -76,7 +74,6 @@ large_subunit_prot = ['60S', '50S']
 def __init__(self):
     cmd.unset("ignore_case")
     self.menuBar.addcascademenu('Plugin','Ribosome')
-
     self.menuBar.addmenuitem('Ribosome','command','Load from PDB',
                              label = 'Load from PDB',
                              command = lambda s=self : fetch_then_chains(s))
@@ -1259,19 +1256,24 @@ def search_interactions(distance = 3):
             if ssu_one != ssu_two:
                 find_neighbors(ssu_one , ssu_two)
 
-def movie_stitch():
+def movie_stitch(png_dir=None,bitrate=2400000,opts="msmpeg4v2:dia=2:predia=2:qns=3"):
     """
     movie_stitch
     Choose a directory containing your pymol movie png files
     and mencoder will stitch them into a movie in the same
-    directory named 'output.avi'
+    directory named 'output.wmv'
     """
-
-    png_dir = tkFileDialog.askdirectory(title="Pick the directory with your movie files.")
-    mencoder_command = "cd " + png_dir + " && /usr/bin/mencoder \"mf://*.png\" -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=wmv1:vbitrate=20000"
-    print "TESTME: " + mencoder_command
+    if png_dir == None:
+        png_dir = tkFileDialog.askdirectory(title="Pick the directory with your movie files.")
+    if png_dir != None:
+#    mencoder_command = "cd " + png_dir + " && /usr/bin/mencoder mf:fps=18 -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=wmv1:vbitrate=" + str(bitrate) + "*.png"
+        mencoder_command = "cd " + png_dir + " && /usr/bin/mencoder mf://*.png -o output.wmv -of lavf -ovc lavc -lavcopts vcodec=" + opts + ":vbitrate=" + str(bitrate)
+        print "Running: " + mencoder_command
 #    s = subprocess.Popen(mencoder_command, stdout=subprocess.PIPE).communicate()[0]
-    s = os.system(mencoder_command)
+        s = os.system(mencoder_command)
+        print "Your movie lives in: " + png_dir + "/" + "output.wmv"
+    else:
+        print "Cannot run without a directory."
 
 
 
