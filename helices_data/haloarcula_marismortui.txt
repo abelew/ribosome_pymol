@@ -152,3 +152,14 @@ SSU_h41,/16S_RRNA///1221-1274
 SSU_h42,/16S_RRNA///1281-1312
 SSU_h43,/16S_RRNA///1328-1351
 SSU_h44,/16S_RRNA///1409-1490
+## Special Regions  (PTC, decoding center)
+decoding,/23S_RRNA///1492-1493 or /30S_S12///42 or /30S_S12///90
+## Drugs below
+## The next 4 are from thermus thermophilus and so may not be correct here
+## From Ramakrishnan's 2000 paper "The structural basis for the action of the antibiotics Tetracycline..."
+tetracycline,/16S_RRNA///965-967 or /16S_RRNA///1195-1198 or /16S_RRNA///1053-1054 or /16S_RRNA///1400 or /16S_RRNA///1398
+tetra2ndary,/16S_RRNA///888-892 or /16S_RRNA///907-910 or /16S_RRNA///244
+pactamycin,/16S_RRNA///926 or /16S_RRNA///795-796 or /16S_RRNA///693-694 or /30S_S7///79-81 or /16S_RRNA///788
+hygromycin,/16S_RRNA///1403-1405 or /16S_RRNA///1499 or /16S_RRNA///1491-1495 or /16S_RRNA///1408-1409
+## From Steitz's 2008 Crystal Structure of the Oxazolidinone...
+oxazolidinone,/50S_RRNA///2486-2487 

@@ -150,3 +150,33 @@ SSU_h41,/16S_RRNA///1221-1274
 SSU_h42,/16S_RRNA///1281-1312
 SSU_h43,/16S_RRNA///1328-1351
 SSU_h44,/16S_RRNA///1409-1490
+B1a,/30S_S13///93-94 or /23S_RRNA///886-888
+B1bc,/30S_S13///6-7 or /30S_S13///13 or /30S_S13///57 or /50S_L5///113 or /50S_L5///115-116
+B2a,/16S_RRNA///1407-1409 or /16S_RRNA///1492-1495 or /16S_RRNA///1517 or  or /23S_RRNA///1912-1920
+B2b,/16S_RRNA///783-784 or /16S_RRNA///1516-1517 or /23S_RRNA///1835-1836 or /23S_RRNA///1932
+B2c,/16S_RRNA///771-772 or /16S_RRNA///899-900 or /23S_RRNA///1832-1833
+B3,/16S_RRNA///1483-1484 or /16S_RRNA///1418-1420 or /23S_RRNA///1947-1948 or /23S_RRNA///1958-1950 or /23S_RRNA///1768
+B4,/30S_S15///39 or /30S_S15///52 or /30S_S15///62-63 or /30S_S15///88 or /23S_RRNA///714-716
+B5,/16S_RRNA///1474-1476 or /16S_RRNA///1421-1422 or /16S_RRNA///1428-1430 or /23S_RRNA///1689-1690 or /23S_RRNA///1700-1704 or /50S_L14///48-54
+B6,/16S_RRNA///1681-1682 or /16S_RRNA///1724-1725 or /16S_RRNA///1429-1430 or /23S_RRNA///1895-1896 or /23S_RRNA///1848
+B7a,/16S_RRNA///699-700 or /16S_RRNA///702 or /23S_RRNA///1895-1896 or /23S_RRNA///1848
+B7b,/16S_RRNA///712-713 or /16S_RRNA///773-776 or /50S_L2///162 or /50S_L2///174 or /50S_L2///200-201
+B8,/16S_RRNA///345-347 or /50S_L19///33-36 or /50S_L19///38-40
+## Special Regions  (PTC, decoding center)
+## This decoding site definition comes from Current Opinion in MicroBio 2005 by Joyce Sutcliffe
+decoding,/23S_RRNA///1403-1409 or /23S_RRNA///1491-1498 or /30S_S12///42 or /30S_S12///90
+## Drugs below
+## From Ramakrishnan's 2000 paper "The structural basis for the action of the antibiotics Tetracycline..."
+tetracycline,/16S_RRNA///965-967 or /16S_RRNA///1195-1198 or /16S_RRNA///1053-1054 or /16S_RRNA///1400 or /16S_RRNA///1398
+tetra2ndary,/16S_RRNA///888-892 or /16S_RRNA///907-910 or /16S_RRNA///244
+pactamycin,/16S_RRNA///926 or /16S_RRNA///795-796 or /16S_RRNA///693-694 or /30S_S7///79-81 or /16S_RRNA///788
+hygromycin,/16S_RRNA///1403-1405 or /16S_RRNA///1499 or /16S_RRNA///1491-1495 or /16S_RRNA///1408-1409
+## From Steitz's 2008 Crystal Structure of the Oxazolidinone... (originally in haloarcula so may not work here.)
+oxazolidinone,/50S_RRNA///2486-2487 
+paromomycin,/16S_RRNA///1406-1409 or /16S_RRNA///1491-1495
+neomycin,/16S_RRNA///1406-1409 or /16S_RRNA///1491-1495
+streptogamin,/30S_RRNA///2058-2062
+chloramphenicol,/30S_RRNA///2058-2062 or /23S_RRNA///2451-2452
+aminoglycosides,/16S_RRNA///1492-1493
+macrolides,/30S_RRNA///2058-2062
+

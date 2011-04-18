@@ -175,5 +175,14 @@ B6,/16S_RRNA///1681-1682 or /16S_RRNA///1724-1725 or /16S_RRNA///1429-1430 or /2
 B7a,/16S_RRNA///699-700 or /16S_RRNA///702 or /23S_RRNA///1895-1896 or /23S_RRNA///1848
 B7b,/16S_RRNA///712-713 or /16S_RRNA///773-776 or /50S_L2///162 or /50S_L2///174 or /50S_L2///200-201
 B8,/16S_RRNA///345-347 or /50S_L19///33-36 or /50S_L19///38-40
-##
-decoding,/23S_RRNA///1492-1493 or /30S_S12///42 or /30S_S12///90
+## Special Regions (PTC, decoding center)
+## This decoding site definition comes from Current Opinion in MicroBio 2005 by Joyce Sutcliffe
+decoding,/23S_RRNA///1403-1409 or /23S_RRNA///1491-1498 or /30S_S12///42 or /30S_S12///90
+## Drug binding sites
+hygromycinB,/16S_RRNA///1403-1406 or /16S_RRNA///1495-1499
+paromomycin,/16S_RRNA///1406-1409 or /16S_RRNA///1491-1495
+neomycin,/16S_RRNA///1406-1409 or /16S_RRNA///1491-1495
+streptogamin,/30S_RRNA///2058-2062
+chloramphenicol,/30S_RRNA///2058-2062 or /23S_RRNA///2451-2452
+aminoglycosides,/16S_RRNA///1492-1493
+macrolides,/30S_RRNA///2058-2062
