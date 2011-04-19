@@ -23,7 +23,7 @@ except:
 sys.path.append(helices_path)
 datadir = None
 if platform.system() == "Windows":
-    datadir = "C:\\Program Files\\PyMOL\\PyMOL\\data\\helices_data\\"
+    datadir = "C:\\Program Files\\PyMOL\\ribosome_pymol\\data\\helices_data\\"
 else:
     datadir = helices_path + "/helices_data/"
 
