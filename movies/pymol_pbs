@@ -1,0 +1,5 @@
+#PBS
+export PYMOL="$MYBASE/bin/${PYM}"
+export PYMOL_COMMAND="$PYMOL -c -r $MOVIE_SCRIPT"
+echo "About to run: $PYMOL_COMMAND"
+$PYMOL_COMMAND
