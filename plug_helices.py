@@ -11,7 +11,7 @@ import csv
 import urllib
 import gzip
 import platform
-from pymol import stored, cmd, selector
+from pymol import stored, cmd, selector, movie
 
 stored.organism = "saccharomyces_cerevisiae"
 
@@ -73,6 +73,12 @@ large_subunit_prot = ['60S', '50S']
 ## This function loads into the pymol menu system and creates 'Ribosome' menu.
 def __init__(self):
     cmd.unset("ignore_case")
+    cmd.set("orthoscopic", 1)
+    cmd.set("ray_shadows", 1)
+    cmd.set("depth_cue", 1)
+    cmd.set("ray_trace_fog", 1)
+    cmd.set("antialias", 1.0)
+    cmd.set("cartoon_ring_mode", 3)
     self.menuBar.addcascademenu('Plugin','Ribosome')
     self.menuBar.addmenuitem('Ribosome','command','Load from PDB',
                              label = 'Load from PDB',
@@ -620,6 +626,10 @@ def make_chains(chains, showastype, showascolor):
   ## Start out figuring out the data file to specify the helices
   ## Currently I just have a stupid if/elif chain for the few species
   ## I have annotated.
+    cmd.set("auto_zoom", "off")
+    cmd.set("auto_show_selections", "off")
+    cmd.set("cartoon_fancy_helices", 1)
+
     test_chains = datadir + chains + '.txt'
     if file(test_chains) is not None:
         chains_filenames = [ test_chains , ]
@@ -1150,6 +1160,10 @@ def switch_chains(old, delete_second = 0):
         rename_chain(old, new_name)
     rename_chain(tmp, old)
 
+def check_ratcheted:
+    ## Use B7a to figure out if any given ribosomal crystal structure is in 
+## the ratcheted state or not.  
+
 def rename_on_bridge_dist(delete_second = 0, lsu_nucleotide = "/25S_RRNA///1024" , ssu_nucleotide = "/18S_RRNA///1240" , switch_prot = "40S_S" , switch_rna = "18S_RRNA"):
     b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
     cmd.disable("B1A_test")
@@ -1301,6 +1315,7 @@ def crown_view():
     Return the (currently yeast) ribosome to the crown view.
     """
     cmd.set_view (0.030628815 , 0.004798603 , -0.999527216 , 0.482913435 , -0.875605762 , 0.010592541 , -0.875139892 , -0.483004808 , -0.029141756 , 0.000000000 , 0.000000000 , -259.756744385 , 12.284235001 , -28.817157745 , 10.823875427 , 204.794189453 , 314.719299316 , -20.000000000)
+
 
 ## End of search_interactions
 cmd.extend("movie_stitch", movie_stitch)
