@@ -1,2 +1,4 @@
 #!/bin/bash
-ssh abelew@login.deepthought.umd.edu /usr/local/torque/bin/qstat
+. render_options.bash
+
+ssh ${CLUSTER_USERNAME}@${CLUSTER_HOSTNAME} $CLUSTER_QSTAT

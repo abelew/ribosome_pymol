@@ -630,30 +630,30 @@ def make_chains(chains, showastype, showascolor):
     cmd.set("auto_show_selections", "off")
     cmd.set("cartoon_fancy_helices", 1)
 
-    test_chains = datadir + chains + '.txt'
+    test_chains = datadir + '/' chains + '/helices.txt'
     if file(test_chains) is not None:
         chains_filenames = [ test_chains , ]
     else:    
-        if chains == 'wtf':
-            print "WTF"
-            chains_filenames = [datadir + 'wtf.txt',]
-        elif chains.find('escherichia_coli') > -1:
-            chains_filenames = [datadir + 'escherichia_coli.txt',]
-        elif chains.find('thermomyces_lanuginosus') > -1:
-            chains_filenames = [datadir + 'thermomyces_languinosus.txt',]
-        elif chains.find('thermus_thermophilus') > -1:
-            chains_filenames =  [datadir + 'thermus_thermophilus.txt',]
-        elif chains.find('haloarcula_marismortui') > -1:
-            chains_filenames = [datadir + 'haloarcula_marismortui.txt',]
-        elif chains.find('saccharomyces') > -1:
-            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-        elif chains.find('saccharomyces_cerevisiae') > -1:
-            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-        elif chains.find('saccharomyces_cerevisiae_s288c') > -1:
-            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
-        else:
-            print "Could not understand the argument:" + chains +", using the wtf file"
-            chains_filenames = [datadir + 'wtf.txt',]
+#        if chains == 'wtf':
+#            print "WTF"
+#            chains_filenames = [datadir + 'wtf.txt',]
+#        elif chains.find('escherichia_coli') > -1:
+#            chains_filenames = [datadir + 'escherichia_coli.txt',]
+#        elif chains.find('thermomyces_lanuginosus') > -1:
+#            chains_filenames = [datadir + 'thermomyces_languinosus.txt',]
+#        elif chains.find('thermus_thermophilus') > -1:
+#            chains_filenames =  [datadir + 'thermus_thermophilus.txt',]
+#        elif chains.find('haloarcula_marismortui') > -1:
+#            chains_filenames = [datadir + 'haloarcula_marismortui.txt',]
+#        elif chains.find('saccharomyces') > -1:
+#            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+#        elif chains.find('saccharomyces_cerevisiae') > -1:
+#            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+#        elif chains.find('saccharomyces_cerevisiae_s288c') > -1:
+#            chains_filenames = [datadir + 'saccharomyces_helices.txt',]
+#        else:
+#            print "Could not understand the argument:" + chains +", using the wtf file"
+#            chains_filenames = [datadir + 'wtf.txt',]
 
   ## Once the species has been decided, open the appropriate file and start
     for chains_filename in chains_filenames:

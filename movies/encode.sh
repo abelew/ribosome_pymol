@@ -1,9 +1,10 @@
 #!/bin/bash
+. render_options.bash
 cd ~/lustre
-rsync -avz --progress --stats abelew@login.deepthought.umd.edu:lustre/ .
+rsync -avz --progress --stats  ${CLUSTER_USERNAME}@${CLUSTER_HOSTNAME}:${CLUSTER_DIR}/ .
 
 echo "Please name the directory to encode."
-read -e DIRECTORY
+read -e DIR
+export DIRECTORY=$DIR
 cd $DIRECTORY
-mencoder mf://*.png -o ../$DIRECTORY.avi -ovc lavc -lavcopts vcodec=mjpeg:vhq:psnr -noskip
-
+../bin/mencoder.sh

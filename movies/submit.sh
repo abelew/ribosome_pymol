@@ -1,14 +1,10 @@
 #!/bin/bash
+. render_options.bash
 echo "This script will submit a ribosome movie session for encoding"
 echo "It requires a couple environment variables to be set."
 echo "1.  SESSIONDIR  :  a directory in which the pymol session file should live."
 echo "2.  MOVIE_SCRIPT : A python script used to direct the movie."
-#export MYBASE=/a/f20-fs1/data/dt-vol6/abelew
-export MYBASE=/export/lustre_1/abelew
-export LD_LIBRARY_PATH=${MYBASE}/bin:${LD_LIBRARY_PATH}
-export PATH=${MYBASE}/bin:${PATH}
-export PYM=pymol1.3
-export FREEMOL=${MYBASE}/bin/freemol
+
 echo "Type the name of the directory with your pymol session here."
 echo "It should contain a single file named 'session.pse' inside it."
 read -e NAME
