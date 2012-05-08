@@ -98,6 +98,10 @@ def __init__(self):
     self.menuBar.addmenuitem('Colors', 'command', 'Custom file',
                              label = 'Custom file',
                              command = lambda: chain_color("custom"))
+    ## Added for Suna to make some bases opaque, but the rest transparent
+    self.menuBar.addmenuitem('Colors', 'command', 'Custom file trans.',
+                             label = 'Custom file trans.',
+                             command = lambda: chain_color("trans"))
     self.menuBar.addcascademenu('Ribosome','Delete objects')
     self.menuBar.addmenuitem('Delete objects', 'command', 'Original', label='Original',
                              command = lambda: delete_original())
@@ -207,6 +211,15 @@ def del_enabled():
     mols = cmd.get_names(enabled_only = 1)
     for mol in mols:
         cmd.delete(mol)
+
+def thick_lines_enabled(width):
+    """
+    thick_lines_enabled
+    Attempts to set the width of the enabled molecules.
+    """
+    mols = cmd.get_names(enabled_only = 1)
+    for mol in mols:
+        cmd.set("line_width", width, mol)
 
 def delete_all_helices():
     """
@@ -410,6 +423,96 @@ def check_fetch(information):
         fetch(information[3],"")
 ## End of check_fetch
 
+def color_saccharomyces():
+    """
+    Color the yusupov 2011 ribosome according to Dr. Dinman's preferences.
+    """
+    protein_colors = {
+        'P1_ALPHA' : 'blue',
+        'P2_BETA' : 'hotpink',
+        '60S_L2' : 'blue',
+        '60S_L3' : 'green',
+        '60S_L4' : 'hotpink',
+        '60S_L5' : 'limon',
+        '60S_L6' : 'forest',
+        '60S_L7' : 'palegreen',
+        '60S_L8' : 'tv_green',
+        '60S_L9' : 'limegreen',
+        '60S_L10' : 'red',
+        '60S_L11' : 'cyan',
+        '60S_L13' : 'orange',
+        '60S_L14' : 'tv_blue',
+        '60S_L15' : 'lightmagenta',
+        '60S_L16' : 'magenta',
+        '60S_L17' : 'smudge',
+        '60S_L18' : 'slate',
+        '60S_L19' : 'marine',
+        '60S_L20' : 'brightorange',
+        '60S_L21' : 'purpleblue',
+        '60S_L22' : 'purple',
+        '60S_L23' : 'slate',
+        '60S_L24' : 'yellow',
+        '60S_L25' : 'violet',
+        '60S_L26' : 'teal',
+        '60S_L27' : 'sand',
+        '60S_L28' : 'chocolate',
+        '60S_L29' : 'blue',
+        '60S_L30' : 'red',
+        '60S_L31' : 'warmpink',
+        '60S_L32' : 'marine',
+        '60S_L33' : 'tv_green',
+        '60S_L34' : 'orange',
+        '60S_L35' : 'limon',
+        '60S_L36' : 'magenta',
+        '60S_L37' : 'chocolate',
+        '60S_L38' : 'limegreen',
+        '60S_L39' : 'chocolate',
+        'UBIQUITIN-60S_L40' : 'chocolate',
+        '60S_ACIDIC_P0' : 'chocolate',
+        '60S_L41' : 'red',
+        '60S_L42' : 'wheat',
+        '60S_L43' : 'smudge',
+        '40S_S0' : 'cyan',
+        '40S_S1' : 'purpleblue',
+        '40S_S2' : 'teal',
+        '40S_S3' : 'yellow',
+        '40S_S4' : 'forest',
+        '40S_S5' : 'chartreuse',
+        '40S_S6' : 'orange',
+        '40S_S7' : 'chartreuse',
+        '40S_S8' : 'red',
+        '40S_S9' : 'yellow',
+        '40S_S10' : 'red',
+        '40S_S11' : 'marine',
+        '40S_S12' : 'tv_green',
+        '40S_S13' : 'wheat',
+        '40S_S14' : 'tv_red',
+        '40S_S15' : 'orange',
+        '40S_S16' : 'slate',
+        '40S_S17' : 'red',
+        '40S_S18' : 'blue',
+        '40S_S19' : 'violetpurple',
+        '40S_S20' : 'deepolive',
+        '40S_S21' : 'red',
+        '40S_S22' : 'orange',
+        '40S_S23' : 'blue',
+        '40S_S24' : 'density',
+        '40S_S25' : 'red',
+        '40S_S26' : 'yellow',
+        '40S_S27' : 'deepblue',
+        '40S_S28' : 'orange',
+        '40S_S29' : 'marine',
+        '40S_S30' : 'raspberry',
+        'UBIQUITIN-40S_S31' : 'magenta',
+        'GUANINE_NUCLEOTIDE-BINDING_SUBUNIT_BETA-LIKE' : 'chocolate',
+        'SUPPRESSOR_STM1' : 'olive',    
+        }
+    for item in (protein_colors.keys()):
+        string = '/' + item
+        try:
+            cmd.color(protein_colors[item], string)
+        except:
+            print "Failed " + string
 
 def fetch(pdb, splitp):
     """
@@ -461,6 +564,12 @@ def chain_color(bases):
         input_file = tmp_filename.name
     comment = ''
 
+    if bases == "trans":
+        objects = cmd.get_names()
+        for o in objects:
+            for v in ["cartoon_ring_transparency" , "cartoon_transparency" , "stick_transparency"]:
+                cmd.set(v, 1.0, o)
+
   ## From here until 'if input_file:' the color definitions
   ## are specified
     colors_file = datadir + 'color_definitions.txt'
@@ -508,6 +617,14 @@ def chain_color(bases):
                     cmd.color(color_name, selection_string)
                 except:
                     cmd.color(colors[None], selection_string)
+
+                if bases == "trans":
+                    new_trans = datum[2].strip()
+                    try:
+                        for v in ["cartoon_ring_transparency" , "cartoon_transparency" , "stick_transparency"]:
+                            cmd.set(v, 0.0, selection_string)
+                    except:
+                        print "Cannot set the cartoon settings."
             except:
                 print "Cannot find your selection, perhaps you must split the chains first"
 ## End of chain_color
@@ -517,7 +634,7 @@ def make_pretty():
   ## These are some settings our professor prefers.
   cmd.bg_color("white")
   cmd.show("cartoon")
-  cmd.set("cartoon_ring_mode", 3)
+#  cmd.set("cartoon_ring_mode", 3)
 ## End of make_pretty
 
 
@@ -630,10 +747,11 @@ def make_chains(chains, showastype, showascolor):
     cmd.set("auto_show_selections", "off")
     cmd.set("cartoon_fancy_helices", 1)
 
-    test_chains = datadir + '/' chains + '/helices.txt'
+    test_chains = datadir + '/' + str(chains) + '/helices.txt'
     if file(test_chains) is not None:
         chains_filenames = [ test_chains , ]
-    else:    
+    else:
+        chains_filenames = [ datadir + 'wtf.txt', ]
 #        if chains == 'wtf':
 #            print "WTF"
 #            chains_filenames = [datadir + 'wtf.txt',]
@@ -667,6 +785,8 @@ def make_chains(chains, showastype, showascolor):
         ## Each line of the file is a name, pymol_specification
         ## so just split by comma and run with it
                 (name, location) = ch.split(',')
+                if re.compile('-[A-Z]$').search(name) is not None:
+                    name = re.sub('-[A-Z]$', '', name)
                 try:
                     cmd.create(name, location)
                     cmd.disable(name)
@@ -1160,34 +1280,49 @@ def switch_chains(old, delete_second = 0):
         rename_chain(old, new_name)
     rename_chain(tmp, old)
 
-def check_ratcheted:
+def check_ratcheted():
     ## Use B7a to figure out if any given ribosomal crystal structure is in 
 ## the ratcheted state or not.  
+    print "Not yet implemented."
 
 def rename_on_bridge_dist(delete_second = 0, lsu_nucleotide = "/25S_RRNA///1024" , ssu_nucleotide = "/18S_RRNA///1240" , switch_prot = "40S_S" , switch_rna = "18S_RRNA"):
-    b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
-    cmd.disable("B1A_test")
-    ## The default values for the B1A bridge are from Yusupov's 2010 paper about the yeast ribosome
-    if (b1a_distance < 0):
-        ## These values for B1A come from Noller 2001 and Yusupov 2010
-        rename_on_bridge_dist(delete_second, "/23S_RRNA///886", "/30S_S13///93", "30S_S", "16S_RRNA")
-    else:
-        
-        if (b1a_distance > 100):
-            mol_list = cmd.get_names("all")
-            for mol in mol_list:
-                if re.compile('_1$').search(mol) is None:
-                    if mol.find(switch_prot) > -1:
-                        switch_chains(mol, delete_second)
-                    elif mol.find(switch_rna) > -1:
-                        switch_chains(mol, delete_second)
+    b1a_distance = 0
+    try:
+        b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
+    except:
+        lsu_nucleotide = "/23S_RRNA///886"
+        ssu_nucleotide = "/30S_S13///93"
+        switch_prot = "30S_S"
+        switch_rna = "16S_RRNA"
+        b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
 
-            for mol in mol_list:
-                if re.compile('UNASSIGNED').search(mol):
-                    print "Skipping unassigned"
-                elif re.compile('_$').search(mol):
-                    name_two = mol + "2"
-                    rename_chain(mol, name_two)
+    print "The distance across the current B1A is: " + str(b1a_distance)
+    if (b1a_distance <= 0):
+        lsu_nucleotide = "/23S_RRNA///886"
+        ssu_nucleotide = "/30S_S13///93"
+        switch_prot = "30S_S"
+        switch_rna = "16S_RRNA"
+        b1a_distance = cmd.distance("B1A_test", lsu_nucleotide, ssu_nucleotide)
+
+    cmd.disable("B1A_test")
+    print "The distance across the current B1A is: " + str(b1a_distance)
+    ## The default values for the B1A bridge are from Yusupov's 2010 paper about the yeast ribosome
+        
+    if (b1a_distance > 100):
+        mol_list = cmd.get_names("all")
+        for mol in mol_list:
+            if re.compile('_1$').search(mol) is None:
+                if mol.find(switch_prot) > -1:
+                    switch_chains(mol, delete_second)
+                elif mol.find(switch_rna) > -1:
+                    switch_chains(mol, delete_second)
+
+        for mol in mol_list:
+            if re.compile('UNASSIGNED').search(mol):
+                print "Skipping unassigned"
+            elif re.compile('_$').search(mol):
+                name_two = mol + "2"
+                rename_chain(mol, name_two)
 
 def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisiae"):
     lsu_protein_list = []
@@ -1199,12 +1334,12 @@ def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisi
             if mol.find(lsu_prot) > -1:
                 print "Found " + mol
                 lsu_protein_list.append(mol)
-        for ssu_prot in small_subunit_prot:
-            if mol.find(ssu_prot) > -1:
-                print "Found " + mol
-                ssu_protein_list.append(mol)
+    for ssu_prot in small_subunit_prot:
+        if mol.find(ssu_prot) > -1:
+            print "Found " + mol
+            ssu_protein_list.append(mol)
 
-    helices_filename = datadir + species + ".txt"
+    helices_filename = datadir + species + "/helices.txt"
     chains_lines = file(helices_filename).readlines()
     for ch in chains_lines:
         if re.compile('^#').search(ch) is not None:
@@ -1290,6 +1425,14 @@ def movie_stitch(png_dir=None,bitrate=2400000,opts="msmpeg4v2:dia=2:predia=2:qns
         print "Cannot run without a directory."
 
 
+def delete_enabled():
+    """
+    delete_enabled
+    Delete anything which is currently enabled.
+    """
+    en = cmd.get_names(enabled_only = 1)
+    for e in en:
+        cmd.delete(e)
 
 def transparent_enabled(tr = 0.7):
     """
@@ -1304,8 +1447,8 @@ def transparent_enabled(tr = 0.7):
         for v in ["cartoon_ring_transparency" , "cartoon_transparency" , "stick_transparency"]:
             print "Setting " + v + " to 0.7 for " + e
             cmd.set(v, tr, e)
-            cmd.set(v, tr, e)
-            cmd.set(v, tr, e)
+#            cmd.set(v, tr, e)
+#            cmd.set(v, tr, e)
     print "Consider also setting the following variables:"
     print "cartoon_oval_width , cartoon_tube_radius , line_width"
     print "cartoon_loop_radius , cartoon_rect_width"
@@ -1318,13 +1461,14 @@ def crown_view(species = "saccharomyces_cerevisiae"):
         cmd.set_view("0.003838378, -0.220511124, -0.975378811, 0.732650876, -0.663220644, 0.152820781, -0.680590451, -0.715204060, 0.159013703, -0.000904173, -0.000284255, -898.858032227, 10.964979172, 21.375329971, 75.672447205, -387776.812500000, 389574.437500000, -20.000000000")
     else:
         print "I haven't yet set the coordinates for " + species
-        print "Try this:
+        print "Try this: "
         cmd.set_view("0.003838378, -0.220511124, -0.975378811, 0.732650876, -0.663220644, 0.152820781, -0.680590451, -0.715204060, 0.159013703, -0.000904173, -0.000284255, -898.858032227, 10.964979172, 21.375329971, 75.672447205, -387776.812500000, 389574.437500000, -20.000000000")
 #
 #"0.030628815 , 0.004798603 , -0.999527216 , 0.482913435 , -0.875605762 , 0.010592541 , -0.875139892 , -0.483004808 , -0.029141756 , 0.000000000 , 0.000000000 , -259.756744385 , 12.284235001 , -28.817157745 , 10.823875427 , 204.794189453 , 314.719299316 , -20.000000000")
 
 
 ## End of search_interactions
+cmd.extend("color_saccharomyces",color_saccharomyces)
 cmd.extend("movie_stitch", movie_stitch)
 cmd.extend("transparent_enabled", transparent_enabled)
 cmd.extend("crown_view", crown_view)
@@ -1343,7 +1487,8 @@ cmd.extend("make_chains", make_chains)
 cmd.extend("load_session", load_session)
 cmd.extend("split_pdb", random_chains("", ""))
 cmd.extend("helices", helices)
-cmd.extend("delete_original",delete_original)
+cmd.extend("delete_enabled", delete_enabled)
+cmd.extend("delete_original", delete_original)
 cmd.extend("delete_mrna", delete_mrna)
 cmd.extend("delete_trna", delete_trna)
 cmd.extend("delete_lsu_rna", delete_lsu_rna)
@@ -1353,7 +1498,9 @@ cmd.extend("delete_ssu_protein", delete_ssu_protein)
 cmd.extend("delete_lsu_helices", delete_lsu_helices)
 cmd.extend("delete_ssu_helices", delete_ssu_helices)
 cmd.extend("delete_all_helices", delete_all_helices)
+cmd.extend("thick_lines_enabled", thick_lines_enabled)
 cmd.extend("get_seq", get_seq)
+cmd.extend("random_chains", random_chains)
 
 ## Below is Charles Moad's copyright notice for fetch.py
 ## Below that, I added the GPLv2, which if it does not conflict
