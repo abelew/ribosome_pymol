@@ -574,11 +574,16 @@ def chain_color(bases):
   ## are specified
     colors_file = datadir + 'color_definitions.txt'
     colors = dict({None : 'gray',})
+    transp = dict({None : '0.0',})
     if colors_file:
         color_lines = file(colors_file).readlines()
     for color_line in color_lines:
         color_datum = color_line.split()
         colors[color_datum[0]] = color_datum[1]
+        try:
+            transp[color_datum[0]] = color_datum[2]
+        except:
+            transp[color_datum[0]] = "0.0"
 
   ## Now read the input file and select the appropriate residues
   ## and color them according to the rules in the colors dictionary
@@ -608,23 +613,21 @@ def chain_color(bases):
                     selection_string = '/' + subunit + '//' + chain + '/' + num
                     selection_name = subunit + '_' + chain + '_' + num
                 color_choice = datum[1].strip()
-                color_name = ''
+                color_name = colors[color_choice]
+                print "Setting color to: " + color_name
                 try:
-                    color_name = colors[color_choice]
-                except:
-                    color_name = color_choice
-                try:
+                    print "In the try."
                     cmd.color(color_name, selection_string)
                 except:
+                    print "In the except."
                     cmd.color(colors[None], selection_string)
 
-                if bases == "trans":
-                    new_trans = datum[2].strip()
-                    try:
-                        for v in ["cartoon_ring_transparency" , "cartoon_transparency" , "stick_transparency"]:
-                            cmd.set(v, 0.0, selection_string)
-                    except:
-                        print "Cannot set the cartoon settings."
+                print "TESMTE: " + transp[color_choice]
+                if str(transp[color_choice]) != "0.0":
+                    print "Setting trans to: " + my_trans
+                    cmd.set("cartoon_ring_transparency", my_trans, selection_string)
+                    cmd.set("cartoon_transparency", my_trans, selection_string)
+                    cmd.set("stick_transparency", my_trans, selection_string)
             except:
                 print "Cannot find your selection, perhaps you must split the chains first"
 ## End of chain_color
