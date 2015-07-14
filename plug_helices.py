@@ -1070,7 +1070,7 @@ def get_seq(selection_string):
         for k in sorted(residues.keys(), cmp=_compare_keys):
             result += one_letter[residues[k]]
 
-            print result
+    print result
 ## End of get_seq
 
 
@@ -1327,6 +1327,12 @@ def rename_on_bridge_dist(delete_second = 0, lsu_nucleotide = "/25S_RRNA///1024"
                 name_two = mol + "2"
                 rename_chain(mol, name_two)
 
+def find_all_neighbors(distance = 3, species = "saccharomyces_cerevisiae"):
+    all_mol = cmd.get_names("all")
+    for mol in all_mol:
+        for second_mol in all_mol:
+            find_neighbors(mol, second_mol, distance)
+
 def search_interactions_helices(distance = 3 , species = "saccharomyces_cerevisiae"):
     lsu_protein_list = []
     ssu_protein_list = []
@@ -1482,13 +1488,14 @@ cmd.extend("rename_on_bridge_dist", rename_on_bridge_dist)
 cmd.extend("search_interactions_helices", search_interactions_helices)
 cmd.extend("search_interactions", search_interactions)
 cmd.extend("find_neighbors", find_neighbors)
+cmd.extend("find_all_neighbors", find_all_neighbors)
 cmd.extend("color_by_amino_acid", color_by_amino_acid)
 cmd.extend("color_by_aa_residue_type", color_by_aa_residue_type)
 cmd.extend("chain_color", chain_color)
 cmd.extend("make_pretty", make_pretty)
 cmd.extend("make_chains", make_chains)
 cmd.extend("load_session", load_session)
-cmd.extend("split_pdb", random_chains("", ""))
+cmd.extend("split_pdb", random_chains)
 cmd.extend("helices", helices)
 cmd.extend("delete_enabled", delete_enabled)
 cmd.extend("delete_original", delete_original)
